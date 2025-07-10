@@ -176,4 +176,5 @@ dist
 
 # typescript 컴파일 js file 제외
 back/**/*.js
+!back/src/config/*.js
 # End of https://www.toptal.com/developers/gitignore/api/macos,node
