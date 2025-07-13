@@ -1,5 +1,6 @@
 import { getArrayNumber } from "../../../utils/array";
-import { shuffleDeck } from "../game.logic";
+import { canPlaceCard, shuffleDeck } from "../game.logic";
+import { Stack } from "../game.model";
 
 describe("shuffle deck", () => {
   it("주어진 개수만큼 덱을 구성해야한다.", () => {
@@ -26,5 +27,43 @@ describe("shuffle deck", () => {
     );
 
     expect(isShuffled).toBe(true);
+  });
+});
+
+describe("canPlaceCard", () => {
+  describe("오름차순", () => {
+    const ascStack: Stack = {
+      id: "asc-1",
+      direction: "asc",
+      cards: [10, 21, 30],
+    };
+
+    it("top card보다 높은 숫자가 있으면 놓을 수 있어야 한다.", () => {
+      expect(canPlaceCard(ascStack, 40)).toBe(true);
+    });
+    it("top card보다 낮은 숫자가 있으면 놓을 수 없어야 한다.", () => {
+      expect(canPlaceCard(ascStack, 11)).toBe(false);
+    });
+    it("top card보다 -10낮은 숫자는 놓을 수 있어야 한다.", () => {
+      expect(canPlaceCard(ascStack, 20)).toBe(true);
+    });
+  });
+
+  describe("내림차순", () => {
+    const descStack: Stack = {
+      id: "desc-1",
+      direction: "desc",
+      cards: [30, 21, 10],
+    };
+
+    it("top card보다 낮은 숫자가 있으면 놓을 수 있어야 한다.", () => {
+      expect(canPlaceCard(descStack, 5)).toBe(true);
+    });
+    it("top card보다 높은 숫자가 있으면 놓을 수 없어야 한다.", () => {
+      expect(canPlaceCard(descStack, 11)).toBe(false);
+    });
+    it("top card보다 +10 높은 숫자는 놓을 수 있어야 한다.", () => {
+      expect(canPlaceCard(descStack, 20)).toBe(true);
+    });
   });
 });
