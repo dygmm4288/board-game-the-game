@@ -3,6 +3,7 @@ import { STACK_DIRECTION } from "../constants";
 import {
   canPlaceCard,
   dealCards,
+  dropCard,
   getHandSize,
   getUpdatedStack,
   hasPlayableCard,
@@ -158,5 +159,38 @@ describe("hasPlayableCard", () => {
       { id: "asc-1", direction: STACK_DIRECTION.ASC, cards: [15] },
     ];
     expect(hasPlayableCard(player, stacks)).toBe(false);
+  });
+});
+
+describe("dropCard", () => {
+  const player: Player = { id: "p1", name: "p1", hand: [10, 3] };
+  const stack: Stack = {
+    id: "asc-1",
+    direction: STACK_DIRECTION.ASC,
+    cards: [5],
+  };
+
+  it("카드가 올바르게 스택에 추가돼야한다 ", () => {
+    const { updatedStack } = dropCard(player, stack, 10);
+    expect(updatedStack.cards).toContain(10);
+  });
+
+  it("카드가 플레이어 손에서 제거돼야한다", () => {
+    const { updatedPlayer } = dropCard(player, stack, 10);
+    expect(updatedPlayer.hand).not.toContain(10);
+  });
+  it("원본 객체는 불변이어야 한다", () => {
+    const { updatedPlayer, updatedStack } = dropCard(player, stack, 10);
+
+    expect(updatedPlayer).not.toBe(player);
+    expect(updatedStack).not.toBe(stack);
+  });
+
+  it("플레이어가 가지지 않은 카드일 경우 오류를 반환해야 한다.", () => {
+    expect(() => dropCard(player, stack, 5)).toThrow(/유효하지 않은 카드/);
+  });
+
+  it("스택에 올릴 수 없는 카드일 경우 오류를 반환해야 한다.", () => {
+    expect(() => dropCard(player, stack, 3)).toThrow(/카드를 올릴 수 없습니다/);
   });
 });

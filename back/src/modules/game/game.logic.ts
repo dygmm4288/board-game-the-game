@@ -63,6 +63,23 @@ export const getUpdatedStack = (stack: Stack, card: number): Stack => {
   return newStack;
 };
 
+export const getUpdatedPlayer = (
+  player: Player,
+  card: number,
+  type: "insert" | "remove",
+): Player => {
+  const newPlayer = cloneDeep(player);
+  const _isCardInHand = isCardInHand(player, card);
+
+  if (type === "insert") newPlayer.hand.push(card);
+  else if (type === "remove" && _isCardInHand)
+    newPlayer.hand.splice(newPlayer.hand.indexOf(card), 1);
+  else if (type === "remove" && !_isCardInHand)
+    throw new Error("유효하지 않은 카드입니다");
+
+  return newPlayer;
+};
+
 export const isCardInHand = (player: Player, card: number) => {
   return player.hand.some((v) => v === card);
 };
@@ -71,4 +88,15 @@ export const hasPlayableCard = (player: Player, Stacks: Stack[]) => {
   return player.hand.some((card) =>
     Stacks.some((stack) => canPlaceCard(stack, card)),
   );
+};
+
+export const dropCard = (
+  player: Player,
+  stack: Stack,
+  card: number,
+): { updatedPlayer: Player; updatedStack: Stack } => {
+  return {
+    updatedPlayer: getUpdatedPlayer(player, card, "remove"),
+    updatedStack: getUpdatedStack(stack, card),
+  };
 };
