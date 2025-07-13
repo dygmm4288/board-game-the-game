@@ -62,3 +62,13 @@ export const getUpdatedStack = (stack: Stack, card: number): Stack => {
 
   return newStack;
 };
+
+export const isCardInHand = (player: Player, card: number) => {
+  return player.hand.some((v) => v === card);
+};
+
+export const hasPlayableCard = (player: Player, Stacks: Stack[]) => {
+  return player.hand.some((card) =>
+    Stacks.some((stack) => canPlaceCard(stack, card)),
+  );
+};

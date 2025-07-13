@@ -5,6 +5,7 @@ import {
   dealCards,
   getHandSize,
   getUpdatedStack,
+  hasPlayableCard,
   shuffleDeck,
 } from "../game.logic";
 import { Player, Stack } from "../game.model";
@@ -141,5 +142,21 @@ describe("getUpdatedStack", () => {
     expect(() => getUpdatedStack(stack, card)).toThrow(
       /카드를 올릴 수 없습니다/,
     );
+  });
+});
+
+describe("hasPlayableCard", () => {
+  const player: Player = { id: "p1", name: "p1", hand: [10] };
+  it("플레이할 수 있는 카드가 존재하면 true를 반환한다.", () => {
+    const stacks: Stack[] = [
+      { id: "asc-1", direction: STACK_DIRECTION.ASC, cards: [5] },
+    ];
+    expect(hasPlayableCard(player, stacks)).toBe(true);
+  });
+  it("플레이할 수 있는 카드가 없으면 false를 반환한다.", () => {
+    const stacks: Stack[] = [
+      { id: "asc-1", direction: STACK_DIRECTION.ASC, cards: [15] },
+    ];
+    expect(hasPlayableCard(player, stacks)).toBe(false);
   });
 });
