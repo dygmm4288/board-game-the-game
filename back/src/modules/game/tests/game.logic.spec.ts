@@ -1,7 +1,12 @@
 import { getArrayNumber } from "../../../utils/array";
 import { STACK_DIRECTION } from "../constants";
-import { canPlaceCard, shuffleDeck } from "../game.logic";
-import { Stack } from "../game.model";
+import {
+  canPlaceCard,
+  dealCards,
+  getHandSize,
+  shuffleDeck,
+} from "../game.logic";
+import { Player, Stack } from "../game.model";
 
 describe("shuffle deck", () => {
   it("주어진 개수만큼 덱을 구성해야한다.", () => {
@@ -66,5 +71,47 @@ describe("canPlaceCard", () => {
     it("top card보다 +10 높은 숫자는 놓을 수 있어야 한다.", () => {
       expect(canPlaceCard(descStack, 20)).toBe(true);
     });
+  });
+});
+
+describe("dealCards", () => {
+  const players: Player[] = [
+    { id: "p1", name: "P1", hand: [] },
+    { id: "p2", name: "P2", hand: [] },
+  ];
+  const handSize = getHandSize(players);
+  const deck = getArrayNumber(100);
+  const [playersWithHands, remainingDeck] = dealCards(
+    deck,
+    players,
+    getHandSize(players),
+  );
+
+  const allCards = [
+    ...remainingDeck,
+    ...playersWithHands.reduce<number[]>(
+      (a, player) => [...a, ...player.hand],
+      [],
+    ),
+  ];
+
+  it("player hand에 각각 size만큼을 가지고 있어야 한다.", () => {
+    playersWithHands.forEach((player) =>
+      expect(player.hand.length).toBe(handSize),
+    );
+  });
+  it("player hand에는 중복없이 카드를 가지고 있어야 한다.", () => {
+    const hands = playersWithHands.reduce<number[]>(
+      (a, player) => [...a, ...player.hand],
+      [],
+    );
+
+    const totalCardCnt = handSize * players.length;
+
+    expect(hands.length).toBe(totalCardCnt);
+  });
+  it("player hand와 남은 카드들을 다 합쳤을 때 중복/누락이 없어야 한다.", () => {
+    expect(new Set(allCards).size).toBe(deck.length);
+    expect(new Set(allCards)).toEqual(new Set(deck));
   });
 });
