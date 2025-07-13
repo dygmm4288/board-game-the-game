@@ -39,3 +39,16 @@ export const dealCards = (
 
   return [newPlayers, _deck];
 };
+
+export const generateDeck = () => {
+  return Array.from({ length: 98 }, (_, i) => i + 2);
+};
+
+export const generateInitialStacks = (): Stack[] => {
+  return [
+    { id: "asc-1", direction: STACK_DIRECTION.ASC, cards: [1] },
+    { id: "asc-2", direction: STACK_DIRECTION.ASC, cards: [1] },
+    { id: "desc-1", direction: STACK_DIRECTION.DESC, cards: [100] },
+    { id: "desc-2", direction: STACK_DIRECTION.DESC, cards: [100] },
+  ];
+};
