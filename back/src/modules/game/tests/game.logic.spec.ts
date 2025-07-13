@@ -4,6 +4,7 @@ import {
   canPlaceCard,
   dealCards,
   getHandSize,
+  getUpdatedStack,
   shuffleDeck,
 } from "../game.logic";
 import { Player, Stack } from "../game.model";
@@ -113,5 +114,32 @@ describe("dealCards", () => {
   it("player hand와 남은 카드들을 다 합쳤을 때 중복/누락이 없어야 한다.", () => {
     expect(new Set(allCards).size).toBe(deck.length);
     expect(new Set(allCards)).toEqual(new Set(deck));
+  });
+});
+
+describe("getUpdatedStack", () => {
+  const stack: Stack = {
+    id: "asc-1",
+    direction: STACK_DIRECTION.ASC,
+    cards: [1],
+  };
+  const card = 10;
+  const newStack = getUpdatedStack(stack, card);
+  it("원본 스택은 변경되면 안된다", () => {
+    expect(newStack).not.toBe(stack);
+  });
+  it("정상적으로 stack에 card가 추가된 새 스택을 반환해야 한다.", () => {
+    expect(newStack.cards).toContain(card);
+  });
+  it("stack에 넣을 수 없는 카드일 경우 오류를 반환해야 한다.", () => {
+    const stack: Stack = {
+      id: "asc-1",
+      direction: STACK_DIRECTION.ASC,
+      cards: [10],
+    };
+    const card = 5;
+    expect(() => getUpdatedStack(stack, card)).toThrow(
+      /카드를 올릴 수 없습니다/,
+    );
   });
 });

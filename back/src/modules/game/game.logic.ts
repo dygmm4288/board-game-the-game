@@ -1,4 +1,4 @@
-import { last, shuffle } from "lodash-es";
+import { cloneDeep, last, shuffle } from "lodash-es";
 import {
   DEFAULT_HAND_SIZE,
   HAND_SIZE_BY_PLAYER_COUNT,
@@ -51,4 +51,14 @@ export const generateInitialStacks = (): Stack[] => {
     { id: "desc-1", direction: STACK_DIRECTION.DESC, cards: [100] },
     { id: "desc-2", direction: STACK_DIRECTION.DESC, cards: [100] },
   ];
+};
+
+export const getUpdatedStack = (stack: Stack, card: number): Stack => {
+  const newStack = cloneDeep(stack);
+
+  if (!canPlaceCard(newStack, card)) throw new Error("카드를 올릴 수 없습니다");
+
+  newStack.cards.push(card);
+
+  return newStack;
 };
