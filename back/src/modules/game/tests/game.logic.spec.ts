@@ -1,4 +1,5 @@
 import { getArrayNumber } from "../../../utils/array";
+import { STACK_DIRECTION } from "../constants";
 import { canPlaceCard, shuffleDeck } from "../game.logic";
 import { Stack } from "../game.model";
 
@@ -34,7 +35,7 @@ describe("canPlaceCard", () => {
   describe("오름차순", () => {
     const ascStack: Stack = {
       id: "asc-1",
-      direction: "asc",
+      direction: STACK_DIRECTION.ASC,
       cards: [10, 21, 30],
     };
 
@@ -52,7 +53,7 @@ describe("canPlaceCard", () => {
   describe("내림차순", () => {
     const descStack: Stack = {
       id: "desc-1",
-      direction: "desc",
+      direction: STACK_DIRECTION.DESC,
       cards: [30, 21, 10],
     };
 
