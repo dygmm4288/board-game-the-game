@@ -53,6 +53,7 @@ export class GameService {
 
     this.game.dropCardCount = this.game.dropCardCount + 1;
   }
+  endTurn(playerId: string) {}
 
   // ----------------------
   // util

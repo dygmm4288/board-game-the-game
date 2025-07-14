@@ -1,5 +1,10 @@
 import { STACK_DIRECTION } from "../constants";
-import { generateDeck, getHandSize } from "../game.logic";
+import {
+  generateDeck,
+  generateInitialStacks,
+  getHandSize,
+  getNextTurnIndex,
+} from "../game.logic";
 import { Game, Player } from "../game.model";
 import { GameService } from "../game.service";
 
@@ -130,5 +135,55 @@ describe("playCard", () => {
 
     service.playCard("asc-1", "p1", game.players[0].hand[0]);
     expect(game.dropCardCount).toBe(2);
+  });
+});
+
+describe("endTurn", () => {
+  let game: Game;
+  let service: GameService;
+
+  beforeEach(() => {
+    game = {
+      id: "g-1",
+      createdAt: new Date(),
+      currentTurn: 0,
+      deck: [],
+      dropCardCount: 0,
+      players: [{ id: "p1", name: "P1", hand: [] }],
+      stacks: generateInitialStacks(),
+      status: "in-progress",
+    };
+    service = new GameService(game);
+  });
+
+  it("보충 덱이 충분할 때는 카드를 2개 이상 내려놓지 않으면 오류를 반환해야한다.", () => {
+    game.deck = [1, 2, 3];
+    game.dropCardCount = 1;
+    expect(() => service.endTurn()).toThrow(/최소 2개 이상 내려놔야 합니다/);
+  });
+
+  it("보충 덱에서 카드가 없을 경우에는 1개만 내야 한다.", () => {
+    game.deck = [];
+    game.dropCardCount = 0;
+    expect(() => service.endTurn()).toThrow(/최소 1개를 내려놔야 합니다/);
+  });
+
+  it("drop card cnt 만큼 덱에서 카드를 보충하고, drop card cnt 초기화, 턴 전환이 일어난다", () => {
+    game.deck = [10, 20, 30, 40];
+    game.players[0].hand = [5];
+    game.dropCardCount = 2;
+
+    const prevHandSize = game.players[0].hand.length;
+    const prevDeckSize = game.deck.length;
+    const prevTurn = game.currentTurn;
+
+    service.endTurn();
+
+    expect(game.dropCardCount).toBe(0);
+    expect(game.currentTurn).toBe(
+      getNextTurnIndex({ ...game, currentTurn: prevTurn }),
+    );
+    expect(game.players[0].hand.length).toBe(prevHandSize + 2);
+    expect(game.deck.length).toBe(prevDeckSize - 2);
   });
 });
