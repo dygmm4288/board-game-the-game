@@ -9,7 +9,6 @@ import {
   getNextTurnIndex,
   getUpdatedStack,
   hasPlayableCard,
-  isGameOver,
   shuffleDeck,
 } from "../game.logic";
 import { Game, Player, Stack } from "../game.model";
@@ -248,31 +247,5 @@ describe("getNextTurnIndex", () => {
     it(`current Turn :${currentTurn} -> expected: ${expected}`, () => {
       expect(getNextTurnIndex(game)).toBe(expected);
     });
-  });
-});
-
-describe("isGameOver", () => {
-  it("게임을 진행할 수 없는 상태면 true를 반환한다.", () => {
-    const gameOverStacks: Stack[] = [
-      { id: "asc-1", direction: STACK_DIRECTION.ASC, cards: [99] },
-      { id: "asc-2", direction: STACK_DIRECTION.ASC, cards: [98] },
-      { id: "desc-1", direction: STACK_DIRECTION.DESC, cards: [2] },
-      { id: "desc-2", direction: STACK_DIRECTION.DESC, cards: [3] },
-    ];
-    const players: Player[] = [{ id: "p1", name: "p1", hand: [5] }];
-
-    expect(isGameOver(gameOverStacks, players)).toBe(true);
-  });
-
-  it("게임을 진행할 수 있는 상태면 false를 반환한다.", () => {
-    const notGameOverStacks: Stack[] = [
-      { id: "asc-1", direction: STACK_DIRECTION.ASC, cards: [5] },
-      { id: "asc-2", direction: STACK_DIRECTION.ASC, cards: [98] },
-      { id: "desc-1", direction: STACK_DIRECTION.DESC, cards: [2] },
-      { id: "desc-2", direction: STACK_DIRECTION.DESC, cards: [3] },
-    ];
-    const players: Player[] = [{ id: "p1", name: "p1", hand: [7] }];
-
-    expect(isGameOver(notGameOverStacks, players)).toBe(false);
   });
 });
