@@ -66,12 +66,12 @@ export const getUpdatedStack = (stack: Stack, card: number): Stack => {
 export const getUpdatedPlayer = (
   player: Player,
   card: number,
-  type: "insert" | "remove",
+  type: "add" | "remove",
 ): Player => {
   const newPlayer = cloneDeep(player);
   const _isCardInHand = isCardInHand(player, card);
 
-  if (type === "insert") newPlayer.hand.push(card);
+  if (type === "add") newPlayer.hand.push(card);
   else if (type === "remove" && _isCardInHand)
     newPlayer.hand.splice(newPlayer.hand.indexOf(card), 1);
   else if (type === "remove" && !_isCardInHand)
@@ -118,7 +118,7 @@ export const drawCard = (
 
   return {
     updatedDeck,
-    updatedPlayer: getUpdatedPlayer(player, card, "insert"),
+    updatedPlayer: getUpdatedPlayer(player, card, "add"),
     card,
   };
 };
