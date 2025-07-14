@@ -225,11 +225,16 @@ describe("drawCard", () => {
 });
 
 describe("getNextTurnIndex", () => {
-  it("현재 플레이어의 수가 2라면 현재 턴이 0이라면 1를 반환해야 한다.", () => {
+  const cases = [
+    { currentTurn: 0, expected: 1 },
+    { currentTurn: 1, expected: 0 },
+  ];
+
+  cases.forEach(({ currentTurn, expected }) => {
     const game: Game = {
       id: "g-1",
       createdAt: new Date(),
-      currentTurn: 0,
+      currentTurn,
       deck: [],
       players: [
         { id: "p1", name: "p1", hand: [] },
@@ -239,27 +244,8 @@ describe("getNextTurnIndex", () => {
       status: "in-progress",
     };
 
-    const nextTurn = getNextTurnIndex(game);
-
-    expect(nextTurn).toBe(1);
-  });
-
-  it("현재 플레이어의 수가 2라면 현재 턴이 1이라면 0를 반환해야 한다.", () => {
-    const game: Game = {
-      id: "g-1",
-      createdAt: new Date(),
-      currentTurn: 1,
-      deck: [],
-      players: [
-        { id: "p1", name: "p1", hand: [] },
-        { id: "p2", name: "p2", hand: [] },
-      ],
-      stacks: [{ id: "asc-1", direction: STACK_DIRECTION.ASC, cards: [] }],
-      status: "in-progress",
-    };
-
-    const nextTurn = getNextTurnIndex(game);
-
-    expect(nextTurn).toBe(0);
+    it(`current Turn :${currentTurn} -> expected: ${expected}`, () => {
+      expect(getNextTurnIndex(game)).toBe(expected);
+    });
   });
 });

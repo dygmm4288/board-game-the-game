@@ -127,3 +127,7 @@ export const getNextTurnIndex = (game: Game): number => {
   const playerSize = game.players.length;
   return (game.currentTurn + 1) % playerSize;
 };
+
+export const isGameOver = (game: Game): boolean => {
+  return true;
+};
