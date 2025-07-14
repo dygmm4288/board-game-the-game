@@ -128,6 +128,6 @@ export const getNextTurnIndex = (game: Game): number => {
   return (game.currentTurn + 1) % playerSize;
 };
 
-export const isGameOver = (game: Game): boolean => {
-  return true;
+export const isGameOver = (stacks: Stack[], players: Player[]): boolean => {
+  return !players.some((player) => hasPlayableCard(player, stacks));
 };
