@@ -1,3 +1,4 @@
+import { STACK_DIRECTION } from "../constants";
 import { generateDeck, getHandSize } from "../game.logic";
 import { Game, Player } from "../game.model";
 import { GameService } from "../game.service";
@@ -35,6 +36,12 @@ describe("startGame", () => {
 
     expect(game.deck.length).toBe(98 - handSize * 2);
     expect(game.stacks.length).toBe(4);
+    expect(
+      game.stacks.filter((v) => v.direction === STACK_DIRECTION.ASC).length,
+    ).toBe(2);
+    expect(
+      game.stacks.filter((v) => v.direction === STACK_DIRECTION.DESC).length,
+    ).toBe(2);
     expect(game.status).toBe("in-progress");
     expect(totalCards.sort((a, b) => a - b)).toEqual(generateDeck());
   });
