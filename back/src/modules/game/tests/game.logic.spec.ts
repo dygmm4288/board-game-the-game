@@ -210,9 +210,9 @@ describe("drawCard", () => {
     expect(updatedPlayer.hand).toContain(card);
   });
 
-  it("덱에 더이상 뽑을 수 없으면 card는 0을 반환해야 한다.", () => {
+  it("덱에 더이상 뽑을 수 없으면 card는 null을 반환해야 한다.", () => {
     const { card } = drawCard([], player);
-    expect(card).toBe(0);
+    expect(card).toBe(null);
   });
 
   it("덱에 더이상 뽑을 수 없으면 변경된 사항이 없어야 한다.", () => {

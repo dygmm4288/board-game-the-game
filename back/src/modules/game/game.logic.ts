@@ -104,14 +104,14 @@ export const dropCard = (
 export const drawCard = (
   deck: number[],
   player: Player,
-): { updatedDeck: number[]; updatedPlayer: Player; card: number } => {
+): { updatedDeck: number[]; updatedPlayer: Player; card: number | null } => {
   const updatedDeck = [...deck];
 
   if (deck.length === 0)
     return {
       updatedDeck,
       updatedPlayer: player,
-      card: 0,
+      card: null,
     };
 
   const card: number = updatedDeck.splice(0, 1)[0];
