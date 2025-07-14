@@ -54,6 +54,9 @@ export class GameService {
     this.game.dropCardCount = this.game.dropCardCount + 1;
   }
 
+  // ----------------------
+  // util
+  // ----------------------
   findBy<K extends keyof GameMap>(key: K, id: string): GameMap[K] {
     return this.game[key].find((v) => v.id === id);
   }
