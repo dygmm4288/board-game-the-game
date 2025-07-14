@@ -55,5 +55,7 @@ export class GameService {
     this.game.stacks = this.game.stacks.map((s) =>
       s.id === stack.id ? updatedStack : s,
     );
+
+    this.game.dropCardCount = this.game.dropCardCount + 1;
   }
 }

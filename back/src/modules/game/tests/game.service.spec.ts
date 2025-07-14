@@ -31,6 +31,7 @@ describe("startGame", () => {
       ...game.deck,
     ];
 
+    expect(game.dropCardCount).toBe(0);
     expect(game.currentTurn).toBe(0);
     expect(game.players.length).toBe(2);
     game.players.forEach((p) => expect(p.hand.length).toBe(handSize));
@@ -120,5 +121,14 @@ describe("playCard", () => {
 
     expect(game.players[0].hand.length).toBe(handSize - 1);
     expect(game.stacks[0].cards.length).toBeGreaterThan(1);
+  });
+
+  it("카드를 드롭하면 drop card cnt가 1씩 증가해야 한다", () => {
+    game.players[0].hand = [2, 3, 4, 5, 6, 7];
+    service.playCard("asc-1", "p1", game.players[0].hand[0]);
+    expect(game.dropCardCount).toBe(1);
+
+    service.playCard("asc-1", "p1", game.players[0].hand[0]);
+    expect(game.dropCardCount).toBe(2);
   });
 });
