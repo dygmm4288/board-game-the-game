@@ -23,7 +23,7 @@ describe("startGame", () => {
 
     service.startGame();
 
-    const handSize = getHandSize(players);
+    const handSize = getHandSize(game.players);
     const totalCards: number[] = [
       ...game.players.reduce<number[]>((a, c) => [...a, ...c.hand], []),
       ...game.deck,
