@@ -100,3 +100,25 @@ export const dropCard = (
     updatedStack: getUpdatedStack(stack, card),
   };
 };
+
+export const drawCard = (
+  deck: number[],
+  player: Player,
+): { updatedDeck: number[]; updatedPlayer: Player; card: number } => {
+  const updatedDeck = [...deck];
+
+  if (deck.length === 0)
+    return {
+      updatedDeck,
+      updatedPlayer: player,
+      card: 0,
+    };
+
+  const card: number = updatedDeck.splice(0, 1)[0];
+
+  return {
+    updatedDeck,
+    updatedPlayer: getUpdatedPlayer(player, card, "insert"),
+    card,
+  };
+};

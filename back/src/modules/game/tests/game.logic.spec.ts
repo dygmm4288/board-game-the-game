@@ -3,6 +3,7 @@ import { STACK_DIRECTION } from "../constants";
 import {
   canPlaceCard,
   dealCards,
+  drawCard,
   dropCard,
   getHandSize,
   getUpdatedStack,
@@ -192,5 +193,31 @@ describe("dropCard", () => {
 
   it("스택에 올릴 수 없는 카드일 경우 오류를 반환해야 한다.", () => {
     expect(() => dropCard(player, stack, 3)).toThrow(/카드를 올릴 수 없습니다/);
+  });
+});
+
+describe("drawCard", () => {
+  const deck = [10, 20, 30];
+  const player: Player = { id: "p1", name: "p1", hand: [] };
+
+  it("덱에서 카드를 뽑으면 그 카드는 없어야 한다.", () => {
+    const { updatedDeck, card } = drawCard(deck, player);
+    expect(updatedDeck).not.toContain(card);
+  });
+
+  it("덱에서 뽑은 카드가 플레이어가 가지고 있어야 한다", () => {
+    const { updatedPlayer, card } = drawCard(deck, player);
+    expect(updatedPlayer.hand).toContain(card);
+  });
+
+  it("덱에 더이상 뽑을 수 없으면 card는 0을 반환해야 한다.", () => {
+    const { card } = drawCard([], player);
+    expect(card).toBe(0);
+  });
+
+  it("덱에 더이상 뽑을 수 없으면 변경된 사항이 없어야 한다.", () => {
+    const { updatedDeck, updatedPlayer } = drawCard([], player);
+    expect(updatedDeck.sort((a, b) => a - b)).toEqual([]);
+    expect(updatedPlayer).toEqual(player);
   });
 });
