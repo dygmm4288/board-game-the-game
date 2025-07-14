@@ -48,12 +48,8 @@ export class GameService {
 
     const { updatedPlayer, updatedStack } = dropCard(player, stack, card);
 
-    this.game.players = this.game.players.map((p) =>
-      p.id === player.id ? updatedPlayer : p,
-    );
-    this.game.stacks = this.game.stacks.map((s) =>
-      s.id === stack.id ? updatedStack : s,
-    );
+    this.game.players = this.mapBy("players", playerId, updatedPlayer);
+    this.game.stacks = this.mapBy("stacks", stackId, updatedStack);
 
     this.game.dropCardCount = this.game.dropCardCount + 1;
   }
@@ -71,5 +67,8 @@ export class GameService {
     const player = this.findBy("players", playerId);
     if (!player) throw new Error("플레이어가 없습니다");
     return player;
+  }
+  mapBy<K extends keyof GameMap>(key: K, id: string, value: GameMap[K]) {
+    return this.game[key].map((v) => (v.id === id ? value : v));
   }
 }
