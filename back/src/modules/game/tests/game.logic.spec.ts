@@ -216,8 +216,9 @@ describe("drawCard", () => {
   });
 
   it("덱에 더이상 뽑을 수 없으면 변경된 사항이 없어야 한다.", () => {
-    const { updatedDeck, updatedPlayer } = drawCard([], player);
-    expect(updatedDeck.sort((a, b) => a - b)).toEqual([]);
+    const emptyDeck: number[] = [];
+    const { updatedDeck, updatedPlayer } = drawCard(emptyDeck, player);
+    expect(updatedDeck.sort((a, b) => a - b)).toEqual(emptyDeck);
     expect(updatedPlayer).toEqual(player);
   });
 });
