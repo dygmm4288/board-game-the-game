@@ -26,4 +26,5 @@ export interface Game {
   stacks: Stack[];
   deck: number[];
   currentTurn: number;
+  dropCardCount: number;
 }

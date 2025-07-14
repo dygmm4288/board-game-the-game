@@ -31,6 +31,7 @@ export class GameService {
     this.game.currentTurn = 0;
     this.game.status = "in-progress";
     this.game.stacks = stacks;
+    this.game.dropCardCount = 0;
   }
 
   playCard(stackId: string, playerId: string, card: number): void {

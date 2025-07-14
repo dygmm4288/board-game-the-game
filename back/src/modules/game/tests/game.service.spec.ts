@@ -18,6 +18,7 @@ describe("startGame", () => {
       players,
       stacks: [],
       status: "waiting",
+      dropCardCount: 0,
     };
 
     const service = new GameService(game);
@@ -64,6 +65,7 @@ describe("playCard", () => {
       players,
       stacks: [],
       status: "waiting",
+      dropCardCount: 0,
     };
     service = new GameService(game);
     service.startGame();

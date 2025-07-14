@@ -242,6 +242,7 @@ describe("getNextTurnIndex", () => {
       ],
       stacks: [{ id: "asc-1", direction: STACK_DIRECTION.ASC, cards: [] }],
       status: "in-progress",
+      dropCardCount: 0,
     };
 
     it(`current Turn :${currentTurn} -> expected: ${expected}`, () => {
