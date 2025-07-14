@@ -110,9 +110,13 @@ describe("playCard", () => {
   it("카드가 스택에 올라가야 하고 플레이어의 손에는 해당 카드가 없어야 한다.", () => {
     const player = game.players[0];
     const card = player.hand[0];
+    const handSize = player.hand.length;
     service.playCard("asc-1", "p1", card);
 
     expect(game.players[0].hand).not.toContain(card);
     expect(game.stacks[0].cards).toContain(card);
+
+    expect(game.players[0].hand.length).toBe(handSize - 1);
+    expect(game.stacks[0].cards.length).toBeGreaterThan(1);
   });
 });
