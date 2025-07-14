@@ -4,7 +4,7 @@ import {
   HAND_SIZE_BY_PLAYER_COUNT,
   STACK_DIRECTION,
 } from "./constants";
-import { Player, Stack } from "./game.model";
+import { Game, Player, Stack } from "./game.model";
 
 export const shuffleDeck = (deck: number[]): number[] => {
   return shuffle(deck);
@@ -121,4 +121,9 @@ export const drawCard = (
     updatedPlayer: getUpdatedPlayer(player, card, "add"),
     card,
   };
+};
+
+export const getNextTurnIndex = (game: Game): number => {
+  const playerSize = game.players.length;
+  return (game.currentTurn + 1) % playerSize;
 };
