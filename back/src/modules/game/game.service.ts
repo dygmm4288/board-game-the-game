@@ -43,8 +43,8 @@ export class GameService {
     if (this.game.status !== "in-progress")
       throw new Error("플레이 중이 아닙니다");
 
-    const player = this.findPlayer(playerId);
-    const stack = this.findStack(stackId);
+    const player = this.findById("players", playerId);
+    const stack = this.findById("stacks", stackId);
 
     if (!player.hand.includes(card))
       throw new Error("존재하지 않은 카드입니다");
@@ -64,7 +64,7 @@ export class GameService {
     const playerIndex = this.findPlayerIndex(playerId);
 
     times(this.game.dropCardCount, () => {
-      const player = this.findPlayer(playerId);
+      const player = this.findById("players", playerId);
       const { updatedDeck, updatedPlayer } = drawCard(this.game.deck, player);
 
       this.game.deck = updatedDeck;
@@ -81,20 +81,17 @@ export class GameService {
   findBy<K extends keyof GameMap>(key: K) {
     return this.game[key].find.bind(this.game[key]);
   }
+
   findById<K extends keyof GameMap>(key: K, id: string): GameMap[K] {
-    return this.findBy(key)((v) => v.id === id);
+    const ERROR_MAP = {
+      stacks: "스택이 없습니다",
+      players: "플레이어가 없습니다",
+    };
+    const value = this.findBy(key)((v) => v.id === id);
+    if (!value) throw new Error(ERROR_MAP[key]);
+    return value;
   }
 
-  findStack(stackId: string) {
-    const stack = this.findById("stacks", stackId);
-    if (!stack) throw new Error("스택이 없습니다");
-    return stack;
-  }
-  findPlayer(playerId: string) {
-    const player = this.findById("players", playerId);
-    if (!player) throw new Error("플레이어가 없습니다");
-    return player;
-  }
   findPlayerIndex(playerId: string) {
     const player = this.game.players.findIndex(
       (player) => player.id === playerId,
