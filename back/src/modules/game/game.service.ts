@@ -59,20 +59,20 @@ export class GameService {
   }
 
   endTurn(playerId: string) {
-    if (isEmptyDeck(this.game)) {
-      if (this.game.dropCardCount < 1)
-        throw new Error("최소 1개를 내려놓아야 합니다");
-    } else {
-      if (this.game.dropCardCount < 2)
-        throw new Error("최소 2개 이상 내려놓아야 합니다");
-    }
+    const _isEmptyDeck = isEmptyDeck(this.game);
+    const dropCardCount = this.game.dropCardCount;
+
+    if (_isEmptyDeck && dropCardCount < 1)
+      throw new Error("최소 1개를 내려놓아야 합니다");
+    if (!_isEmptyDeck && dropCardCount < 2)
+      throw new Error("최소 2개 이상 내려놓아야 합니다");
 
     const playerIndex = this.findPlayerIndex(playerId);
 
     times(this.game.dropCardCount, () => {
       const player = this.findPlayer(playerId);
       const { updatedDeck, updatedPlayer } = drawCard(this.game.deck, player);
-      console.log({ updatedPlayer });
+
       this.game.deck = updatedDeck;
       this.game.players[playerIndex] = updatedPlayer;
     });
