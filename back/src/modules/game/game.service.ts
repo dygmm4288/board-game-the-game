@@ -1,11 +1,15 @@
+import { times } from "lodash";
 import { GameMap } from "../../types/game";
 import {
   canPlaceCard,
   dealCards,
+  drawCard,
   dropCard,
   generateDeck,
   generateInitialStacks,
   getHandSize,
+  getNextTurnIndex,
+  isEmptyDeck,
   shuffleDeck,
 } from "./game.logic";
 import { Game } from "./game.model";
@@ -53,7 +57,29 @@ export class GameService {
 
     this.game.dropCardCount = this.game.dropCardCount + 1;
   }
-  endTurn(playerId: string) {}
+
+  endTurn(playerId: string) {
+    if (isEmptyDeck(this.game)) {
+      if (this.game.dropCardCount < 1)
+        throw new Error("최소 1개를 내려놓아야 합니다");
+    } else {
+      if (this.game.dropCardCount < 2)
+        throw new Error("최소 2개 이상 내려놓아야 합니다");
+    }
+
+    const playerIndex = this.findPlayerIndex(playerId);
+
+    times(this.game.dropCardCount, () => {
+      const player = this.findPlayer(playerId);
+      const { updatedDeck, updatedPlayer } = drawCard(this.game.deck, player);
+      console.log({ updatedPlayer });
+      this.game.deck = updatedDeck;
+      this.game.players[playerIndex] = updatedPlayer;
+    });
+
+    this.game.dropCardCount = 0;
+    this.game.currentTurn = getNextTurnIndex(this.game);
+  }
 
   // ----------------------
   // util
@@ -70,6 +96,13 @@ export class GameService {
   findPlayer(playerId: string) {
     const player = this.findBy("players", playerId);
     if (!player) throw new Error("플레이어가 없습니다");
+    return player;
+  }
+  findPlayerIndex(playerId: string) {
+    const player = this.game.players.findIndex(
+      (player) => player.id === playerId,
+    );
+    if (player === -1) throw new Error("플레이어가 없습니다");
     return player;
   }
   mapBy<K extends keyof GameMap>(key: K, id: string, value: GameMap[K]) {

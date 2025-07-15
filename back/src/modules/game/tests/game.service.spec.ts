@@ -159,13 +159,15 @@ describe("endTurn", () => {
   it("보충 덱이 충분할 때는 카드를 2개 이상 내려놓지 않으면 오류를 반환해야한다.", () => {
     game.deck = [1, 2, 3];
     game.dropCardCount = 1;
-    expect(() => service.endTurn()).toThrow(/최소 2개 이상 내려놔야 합니다/);
+    expect(() => service.endTurn("p1")).toThrow(
+      /최소 2개 이상 내려놓아야 합니다/,
+    );
   });
 
   it("보충 덱에서 카드가 없을 경우에는 1개만 내야 한다.", () => {
     game.deck = [];
     game.dropCardCount = 0;
-    expect(() => service.endTurn()).toThrow(/최소 1개를 내려놔야 합니다/);
+    expect(() => service.endTurn("p1")).toThrow(/최소 1개를 내려놓아야 합니다/);
   });
 
   it("drop card cnt 만큼 덱에서 카드를 보충하고, drop card cnt 초기화, 턴 전환이 일어난다", () => {
@@ -177,7 +179,7 @@ describe("endTurn", () => {
     const prevDeckSize = game.deck.length;
     const prevTurn = game.currentTurn;
 
-    service.endTurn();
+    service.endTurn("p1");
 
     expect(game.dropCardCount).toBe(0);
     expect(game.currentTurn).toBe(
