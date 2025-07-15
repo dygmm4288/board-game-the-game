@@ -1,5 +1,6 @@
 import { times } from "lodash";
 import { GameMap } from "../../types/game";
+import { GAME_FIND_ERROR_MAP } from "./constants";
 import {
   canPlaceCard,
   dealCards,
@@ -83,12 +84,8 @@ export class GameService {
   }
 
   findById<K extends keyof GameMap>(key: K, id: string): GameMap[K] {
-    const ERROR_MAP = {
-      stacks: "스택이 없습니다",
-      players: "플레이어가 없습니다",
-    };
     const value = this.findBy(key)((v) => v.id === id);
-    if (!value) throw new Error(ERROR_MAP[key]);
+    if (!value) throw new Error(GAME_FIND_ERROR_MAP[key]);
     return value;
   }
 
