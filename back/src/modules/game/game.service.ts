@@ -78,17 +78,17 @@ export class GameService {
   // ----------------------
   // util
   // ----------------------
-  findBy<K extends keyof GameMap>(key: K, id: string): GameMap[K] {
+  findById<K extends keyof GameMap>(key: K, id: string): GameMap[K] {
     return this.game[key].find((v) => v.id === id);
   }
 
   findStack(stackId: string) {
-    const stack = this.findBy("stacks", stackId);
+    const stack = this.findById("stacks", stackId);
     if (!stack) throw new Error("스택이 없습니다");
     return stack;
   }
   findPlayer(playerId: string) {
-    const player = this.findBy("players", playerId);
+    const player = this.findById("players", playerId);
     if (!player) throw new Error("플레이어가 없습니다");
     return player;
   }
