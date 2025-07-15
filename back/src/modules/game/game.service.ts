@@ -9,7 +9,7 @@ import {
   generateInitialStacks,
   getHandSize,
   getNextTurnIndex,
-  isEmptyDeck,
+  isValidDropCard,
   shuffleDeck,
 } from "./game.logic";
 import { Game } from "./game.model";
@@ -59,13 +59,7 @@ export class GameService {
   }
 
   endTurn(playerId: string) {
-    const _isEmptyDeck = isEmptyDeck(this.game);
-    const dropCardCount = this.game.dropCardCount;
-
-    if (_isEmptyDeck && dropCardCount < 1)
-      throw new Error("최소 1개를 내려놓아야 합니다");
-    if (!_isEmptyDeck && dropCardCount < 2)
-      throw new Error("최소 2개 이상 내려놓아야 합니다");
+    isValidDropCard(this.game.dropCardCount, this.game.deck);
 
     const playerIndex = this.findPlayerIndex(playerId);
 

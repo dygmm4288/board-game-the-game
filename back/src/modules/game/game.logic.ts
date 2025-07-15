@@ -123,8 +123,15 @@ export const drawCard = (
   };
 };
 
-export const isEmptyDeck = (game: Game) => {
-  return game.deck.length === 0;
+export const isValidDropCard = (
+  dropCardCount: number,
+  deck: number[],
+): void => {
+  const isEmptyDeck = deck.length === 0;
+  if (isEmptyDeck && dropCardCount < 1)
+    throw new Error("최소 1개를 내려놓아야 합니다");
+  if (!isEmptyDeck && dropCardCount < 2)
+    throw new Error("최소 2개 이상 내려놓아야 합니다");
 };
 
 export const getNextTurnIndex = (game: Game): number => {
