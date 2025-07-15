@@ -138,3 +138,7 @@ export const getNextTurnIndex = (game: Game): number => {
   const playerSize = game.players.length;
   return (game.currentTurn + 1) % playerSize;
 };
+
+export const isWinGame = (game: Game): boolean => {
+  return game.players.every((player) => player.hand.length === 0);
+};

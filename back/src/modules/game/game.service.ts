@@ -11,6 +11,7 @@ import {
   getHandSize,
   getNextTurnIndex,
   isValidDropCard,
+  isWinGame,
   shuffleDeck,
 } from "./game.logic";
 import { Game } from "./game.model";
@@ -73,16 +74,16 @@ export class GameService {
     });
 
     this.game.dropCardCount = 0;
-    let flag = false;
-    for (let i = 0; i < this.game.players.length; i++) {
-      const nextTurn = getNextTurnIndex(this.game);
-      this.game.currentTurn = nextTurn;
-      if (this.game.players[nextTurn].hand.length !== 0) {
-        flag = true;
-        break;
+    if (isWinGame(this.game)) this.game.status = "finished";
+    else {
+      for (let i = 0; i < this.game.players.length; i++) {
+        const nextTurn = getNextTurnIndex(this.game);
+        this.game.currentTurn = nextTurn;
+        if (this.game.players[nextTurn].hand.length !== 0) {
+          break;
+        }
       }
     }
-    if (!flag) this.game.status = "finished";
   }
 
   // ----------------------
