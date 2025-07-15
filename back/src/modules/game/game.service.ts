@@ -76,13 +76,8 @@ export class GameService {
     this.game.dropCardCount = 0;
     if (isWinGame(this.game)) this.game.status = "finished";
     else {
-      for (let i = 0; i < this.game.players.length; i++) {
-        const nextTurn = getNextTurnIndex(this.game);
-        this.game.currentTurn = nextTurn;
-        if (this.game.players[nextTurn].hand.length !== 0) {
-          break;
-        }
-      }
+      const nextTurn = getNextTurnIndex(this.game);
+      if (nextTurn !== -1) this.game.currentTurn = nextTurn;
     }
   }
 

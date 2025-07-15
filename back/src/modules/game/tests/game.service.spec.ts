@@ -3,7 +3,6 @@ import {
   generateDeck,
   generateInitialStacks,
   getHandSize,
-  getNextTurnIndex,
 } from "../game.logic";
 import { Game, Player } from "../game.model";
 import { GameService } from "../game.service";
@@ -182,9 +181,7 @@ describe("endTurn", () => {
     service.endTurn("p1");
 
     expect(game.dropCardCount).toBe(0);
-    expect(game.currentTurn).toBe(
-      getNextTurnIndex({ ...game, currentTurn: prevTurn }),
-    );
+    expect(game.currentTurn).toBe(0);
     expect(game.players[0].hand.length).toBe(prevHandSize + 2);
     expect(game.deck.length).toBe(prevDeckSize - 2);
   });

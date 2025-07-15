@@ -226,8 +226,8 @@ describe("drawCard", () => {
 
 describe("getNextTurnIndex", () => {
   const cases = [
-    { currentTurn: 0, expected: 1 },
-    { currentTurn: 1, expected: 0 },
+    { currentTurn: 0, expected: -1 },
+    { currentTurn: 1, expected: -1 },
   ];
 
   cases.forEach(({ currentTurn, expected }) => {

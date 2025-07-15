@@ -136,7 +136,11 @@ export const isValidDropCard = (
 
 export const getNextTurnIndex = (game: Game): number => {
   const playerSize = game.players.length;
-  return (game.currentTurn + 1) % playerSize;
+  const index = game.players
+    .map((_, idx) => (idx + 1) % playerSize)
+    .find((idx) => game.players[idx].hand.length !== 0);
+  if (!index) return -1;
+  return index;
 };
 
 export const isWinGame = (game: Game): boolean => {
