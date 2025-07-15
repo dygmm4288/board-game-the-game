@@ -188,4 +188,22 @@ describe("endTurn", () => {
     expect(game.players[0].hand.length).toBe(prevHandSize + 2);
     expect(game.deck.length).toBe(prevDeckSize - 2);
   });
+
+  it("턴 전환이 일어날 경우 더이상 낼 카드가 없는 플레이어를 제외하고 다음 플레이어가 나와야 한다", () => {
+    game.deck = [10, 20, 30, 40];
+    game.players[0].hand = [5];
+    game.players = [
+      game.players[0],
+      { id: "p2", name: "p2", hand: [] },
+      { id: "p3", name: "p3", hand: [1, 2] },
+    ];
+    game.dropCardCount = 2;
+
+    service.endTurn("p1");
+    console.log(game.currentTurn);
+
+    const player = game.players[game.currentTurn];
+
+    expect(player.id).toBe("p3");
+  });
 });

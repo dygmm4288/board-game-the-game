@@ -73,7 +73,16 @@ export class GameService {
     });
 
     this.game.dropCardCount = 0;
-    this.game.currentTurn = getNextTurnIndex(this.game);
+    let flag = false;
+    for (let i = 0; i < this.game.players.length; i++) {
+      const nextTurn = getNextTurnIndex(this.game);
+      this.game.currentTurn = nextTurn;
+      if (this.game.players[nextTurn].hand.length !== 0) {
+        flag = true;
+        break;
+      }
+    }
+    if (!flag) this.game.status = "finished";
   }
 
   // ----------------------
