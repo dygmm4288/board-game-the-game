@@ -78,8 +78,11 @@ export class GameService {
   // ----------------------
   // util
   // ----------------------
+  findBy<K extends keyof GameMap>(key: K) {
+    return this.game[key].find.bind(this.game[key]);
+  }
   findById<K extends keyof GameMap>(key: K, id: string): GameMap[K] {
-    return this.game[key].find((v) => v.id === id);
+    return this.findBy(key)((v) => v.id === id);
   }
 
   findStack(stackId: string) {
