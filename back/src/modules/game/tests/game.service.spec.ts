@@ -200,10 +200,24 @@ describe("endTurn", () => {
     game.dropCardCount = 2;
 
     service.endTurn("p1");
-    console.log(game.currentTurn);
 
     const player = game.players[game.currentTurn];
 
     expect(player.id).toBe("p3");
+  });
+
+  it("마지막 턴을 기점으로 게임 상태가 변해야 한다.", () => {
+    game.deck = [];
+    game.players[0].hand = [];
+    game.players = [
+      game.players[0],
+      { id: "p2", name: "p2", hand: [] },
+      { id: "p3", name: "p3", hand: [] },
+    ];
+    game.dropCardCount = 2;
+
+    service.endTurn("p1");
+
+    expect(game.status).toBe("finished");
   });
 });
