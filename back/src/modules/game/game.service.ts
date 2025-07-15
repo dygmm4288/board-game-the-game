@@ -62,7 +62,7 @@ export class GameService {
   endTurn(playerId: string) {
     isValidDropCard(this.game.dropCardCount, this.game.deck);
 
-    const playerIndex = this.findPlayerIndex(playerId);
+    const playerIndex = this.findByIndex("players", playerId);
 
     times(this.game.dropCardCount, () => {
       const player = this.findById("players", playerId);
@@ -89,13 +89,12 @@ export class GameService {
     return value;
   }
 
-  findPlayerIndex(playerId: string) {
-    const player = this.game.players.findIndex(
-      (player) => player.id === playerId,
-    );
-    if (player === -1) throw new Error("플레이어가 없습니다");
-    return player;
+  findByIndex<K extends keyof GameMap>(key: K, id: string) {
+    const index = this.game[key].findIndex((value) => value.id === id);
+    if (index === -1) throw new Error(GAME_FIND_ERROR_MAP[key]);
+    return index;
   }
+
   mapBy<K extends keyof GameMap>(key: K, id: string, value: GameMap[K]) {
     return this.game[key].map((v) => (v.id === id ? value : v));
   }
