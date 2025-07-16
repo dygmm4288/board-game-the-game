@@ -84,6 +84,19 @@ export class GameService {
       if (nextTurn !== -1) this.game.currentTurn = nextTurn;
     }
   }
+
+  getGameView(playerId: string) {
+    const view: Game = {
+      ...this.game,
+      players: this.game.players.map((player) =>
+        player.id === playerId
+          ? player
+          : { ...player, hand: [], handCnt: player.hand.length },
+      ),
+    };
+
+    return view;
+  }
   // ----------------------
   // static methods
   // ----------------------
