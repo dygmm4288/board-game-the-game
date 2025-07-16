@@ -1,3 +1,4 @@
+import { uniqueId } from "lodash";
 import { GameStatus } from "../../types/game";
 import { STACK_DIRECTION } from "./constants";
 
@@ -28,3 +29,20 @@ export interface Game {
   currentTurn: number;
   dropCardCount: number;
 }
+
+export const createGame = (players: Player[]): Game => {
+  return {
+    id: uniqueId(),
+    createdAt: new Date(),
+    status: "waiting",
+    deck: [],
+    stacks: [],
+    currentTurn: -1,
+    dropCardCount: -1,
+    players,
+  };
+};
+
+export const createPlayer = (players: Omit<Player, "hand">[]) => {
+  return players.map((player) => ({ ...player, hand: [] }));
+};

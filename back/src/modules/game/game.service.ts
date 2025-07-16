@@ -15,7 +15,7 @@ import {
   isWinGame,
   shuffleDeck,
 } from "./game.logic";
-import { Game } from "./game.model";
+import { createGame, createPlayer, Game, Player } from "./game.model";
 
 export class GameService {
   private game: Game;
@@ -83,6 +83,15 @@ export class GameService {
       const nextTurn = getNextTurnIndex(this.game);
       if (nextTurn !== -1) this.game.currentTurn = nextTurn;
     }
+  }
+  // ----------------------
+  // static methods
+  // ----------------------
+  static setupNewGame(playerInfos: Omit<Player, "hand">[]): GameService {
+    const players = createPlayer(playerInfos);
+    const game = createGame(players);
+
+    return new GameService(game);
   }
 
   // ----------------------
