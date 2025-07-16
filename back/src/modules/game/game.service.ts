@@ -11,6 +11,7 @@ import {
   getHandSize,
   getNextTurnIndex,
   isValidDropCard,
+  isValidPlayer,
   isWinGame,
   shuffleDeck,
 } from "./game.logic";
@@ -48,6 +49,8 @@ export class GameService {
     const player = this.findById("players", playerId);
     const stack = this.findById("stacks", stackId);
 
+    isValidPlayer(this.game, playerId);
+
     if (!player.hand.includes(card))
       throw new Error("존재하지 않은 카드입니다");
     if (!canPlaceCard(stack, card)) throw new Error("카드를 올릴 수 없습니다");
@@ -61,6 +64,7 @@ export class GameService {
   }
 
   endTurn(playerId: string) {
+    isValidPlayer(this.game, playerId);
     isValidDropCard(this.game.dropCardCount, this.game.deck);
 
     const playerIndex = this.findByIndex("players", playerId);

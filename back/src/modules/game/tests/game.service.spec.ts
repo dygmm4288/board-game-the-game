@@ -218,3 +218,30 @@ describe("endTurn", () => {
     expect(game.status).toBe("finished");
   });
 });
+
+describe("현재 플레이어 여부 확인", () => {
+  const game: Game = {
+    deck: [],
+    createdAt: new Date(),
+    currentTurn: 0,
+    players: [
+      { id: "p1", name: "p1", hand: [] },
+      { id: "p2", name: "p2", hand: [] },
+    ],
+    dropCardCount: 0,
+    id: "game-1",
+    stacks: [{ id: "asc-1", cards: [], direction: STACK_DIRECTION.ASC }],
+    status: "in-progress",
+  };
+  const service = new GameService(game);
+
+  it("endTurn을 실행할 때 현재 플레이어가 아니면 오류를 반환해야 한다.", () => {
+    expect(() => service.endTurn("p2")).toThrow(/올바르지 않은 플레이어입니다/);
+  });
+
+  it("playCard를 실행할 때 현재 플레이어가 아니면 오류를 반환해야 한다.", () => {
+    expect(() => service.playCard("asc-1", "p2", 0)).toThrow(
+      /올바르지 않은 플레이어입니다/,
+    );
+  });
+});

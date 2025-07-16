@@ -134,6 +134,13 @@ export const isValidDropCard = (
     throw new Error("최소 2개 이상 내려놓아야 합니다");
 };
 
+export const isValidPlayer = (game: Game, playerId: string) => {
+  const { currentTurn } = game;
+  const index = game.players.findIndex((player) => player.id === playerId);
+
+  if (index !== currentTurn) throw new Error("올바르지 않은 플레이어입니다");
+};
+
 export const getNextTurnIndex = (game: Game): number => {
   const playerSize = game.players.length;
   const index = game.players
