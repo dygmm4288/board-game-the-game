@@ -217,6 +217,20 @@ describe("endTurn", () => {
 
     expect(game.status).toBe("finished");
   });
+
+  it("마지막 턴을 종료할 때 더 이상 게임을 진행할 수 없다면 게임상태가 끝나야 한다.", () => {
+    game.deck = [];
+    game.players[0].hand = [];
+    game.players = [game.players[0], { id: "p2", name: "p2", hand: [5] }];
+    game.stacks = [
+      { id: "asc-1", direction: STACK_DIRECTION.ASC, cards: [10] },
+    ];
+    game.dropCardCount = 1;
+
+    service.endTurn("p1");
+
+    expect(game.status).toBe("finished");
+  });
 });
 
 describe("현재 플레이어 여부 확인", () => {

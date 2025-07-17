@@ -10,6 +10,7 @@ import {
   generateInitialStacks,
   getHandSize,
   getNextTurnIndex,
+  isLoseGame,
   isValidDropCard,
   isValidPlayer,
   isWinGame,
@@ -78,7 +79,8 @@ export class GameService {
     });
 
     this.game.dropCardCount = 0;
-    if (isWinGame(this.game)) this.game.status = "finished";
+    if (isWinGame(this.game) || isLoseGame(this.game))
+      this.game.status = "finished";
     else {
       const nextTurn = getNextTurnIndex(this.game);
       if (nextTurn !== -1) this.game.currentTurn = nextTurn;

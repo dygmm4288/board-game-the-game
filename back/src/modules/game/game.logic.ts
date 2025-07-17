@@ -153,3 +153,10 @@ export const getNextTurnIndex = (game: Game): number => {
 export const isWinGame = (game: Game): boolean => {
   return game.players.every((player) => player.hand.length === 0);
 };
+
+export const isLoseGame = (game: Game): boolean => {
+  return game.players.every(
+    (player) =>
+      !hasPlayableCard(player, game.stacks) || player.hand.length === 0,
+  );
+};
