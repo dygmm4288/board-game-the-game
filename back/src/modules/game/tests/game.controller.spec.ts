@@ -16,7 +16,6 @@ describe("POST /games", () => {
 
   it("요청이 들어오면 올바르게 게임을 만들어서 반환해야 한다.", async () => {
     const response = await request(app).post("/games");
-    console.log(response);
 
     expect(response.status).toBe(200);
   });
