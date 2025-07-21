@@ -1,4 +1,4 @@
-import bcrypt from "bcrypt";
+import hash from "../../utils/hash";
 export const comparePassword = async (encodedPwd: string, plainPwd: string) => {
   const hashedPwd = await hashPassword(plainPwd);
 
@@ -6,5 +6,5 @@ export const comparePassword = async (encodedPwd: string, plainPwd: string) => {
 };
 
 export const hashPassword = async (plainPwd: string) => {
-  return await bcrypt.hash(plainPwd, 10);
+  return await hash.generateHash(plainPwd);
 };
