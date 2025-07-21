@@ -55,7 +55,7 @@ export class GameModel extends BaseEntity {
   id!: string;
 
   @Column({ type: "datetime", default: new Date() })
-  created_at?: Date;
+  created_at!: Date;
 
   @Column({ type: "varchar", default: "waiting" })
   status!: "waiting" | "in-progress" | "finished";
