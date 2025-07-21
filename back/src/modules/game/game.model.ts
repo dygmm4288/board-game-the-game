@@ -1,4 +1,5 @@
 import { uniqueId } from "lodash";
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 import { GameStatus } from "../../types/game";
 import { STACK_DIRECTION } from "./constants";
 
@@ -47,3 +48,22 @@ export const createGame = (players: Player[]): Game => {
 export const createPlayer = (players: Omit<Player, "hand">[]) => {
   return players.map((player) => ({ ...player, hand: [] }));
 };
+
+@Entity("games")
+export class GameModel extends BaseEntity {
+  @PrimaryGeneratedColumn("uuid")
+  id!: string;
+
+  @Column({ type: "datetime", default: new Date() })
+  created_at?: Date;
+
+  @Column({ type: "varchar", default: "waiting" })
+  status!: "waiting" | "in-progress" | "finished";
+
+  @Column({ type: "varchar", default: "waiting" })
+  deck?: number[];
+  stacks?: number[];
+  currentTurn?: number;
+  dropCardCount?: number;
+  players?: number[];
+}
