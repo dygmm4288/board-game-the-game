@@ -1,16 +1,29 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import {
+  BaseEntity,
+  BeforeInsert,
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+} from "typeorm";
+import { hashPassword } from "./user.logic";
 
 @Entity("users")
-export class GameModel extends BaseEntity {
+export class UserModel extends BaseEntity {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
-  @Column({ type: "datetime", default: new Date() })
+  @CreateDateColumn()
   created_at!: Date;
 
-  @Column({ type: "varchar", default: null })
+  @Column({ type: "varchar" })
   name!: string;
 
-  @Column({ type: "varchar", default: null })
+  @Column({ type: "varchar" })
   password!: string;
+
+  @BeforeInsert()
+  async hashPassword() {
+    this.password = await hashPassword(this.password);
+  }
 }
