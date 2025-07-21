@@ -60,10 +60,18 @@ export class GameModel extends BaseEntity {
   @Column({ type: "varchar", default: "waiting" })
   status!: "waiting" | "in-progress" | "finished";
 
-  @Column({ type: "varchar", default: "waiting" })
+  @Column({ type: "array", default: [] })
   deck?: number[];
+
+  @Column({ type: "array", default: [] })
   stacks?: number[];
+
+  @Column({ type: "number", default: -1 })
   currentTurn?: number;
+
+  @Column({ type: "number", default: -1 })
   dropCardCount?: number;
+
+  @Column({ type: "array", default: null })
   players?: number[];
 }
