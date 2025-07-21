@@ -9,7 +9,7 @@ export class UserService {
     this.userRepository = AppDataSource.getRepository(UserModel);
   }
 
-  async postUser(
+  public async postUser(
     userData: Pick<UserModel, "name" | "password">,
   ): Promise<UserModel> {
     const newUser = this.userRepository.create({
@@ -22,8 +22,10 @@ export class UserService {
     return newUser;
   }
 
-  async getUser(name: string): Promise<UserModel | null> {
+  public async getUser(name: string): Promise<UserModel | null> {
     const user = await this.userRepository.findOneBy({ name });
     return user;
   }
 }
+
+export default new UserService();

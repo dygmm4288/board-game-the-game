@@ -1,13 +1,16 @@
 import { Request, Response } from "express";
 import { comparePassword } from "./user.logic";
-import { getUser, postUser } from "./user.service";
+import User from "./user.service";
 class UserController {
   public async signUp(req: Request, res: Response) {
     const { username, password } = req.body;
 
     if (!username || !password) return res.status(404);
 
-    const user = await postUser(username, password);
+    const existUser = await User.getUser(username);
+    if (existUser) return res.status(404);
+
+    const user = await User.postUser({ name: username, password });
     if (!user) res.status(404);
 
     res.status(200);
@@ -16,7 +19,7 @@ class UserController {
   public async signIn(req: Request, res: Response) {
     const { username, password } = req.body;
 
-    const user = await getUser(username);
+    const user = await User.getUser(username);
     if (!user) return res.status(401);
 
     if (!(await comparePassword(user.password, password)))
