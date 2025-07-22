@@ -1,4 +1,6 @@
 import { useState, type ChangeEvent, type FormEvent } from "react";
+import { auth } from "../api/services";
+import User from "../models/user";
 type Form = {
   name: string;
   pwd: string;
@@ -36,6 +38,13 @@ export default function useLoginForm({ type }: { type: "login" | "signup" }) {
   const handleSignup = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (validate()) return;
+
+    auth
+      .post(loginForm)
+      .then((res) => User.create(res.data) as User)
+      .then((res) => {
+        // TODO: store auth info
+      });
   };
 
   return {
