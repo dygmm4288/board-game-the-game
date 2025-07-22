@@ -13,4 +13,5 @@ class Store {
     return JSON.parse(value);
   }
 }
-export default new Store();
+const store = new Store();
+export default store;

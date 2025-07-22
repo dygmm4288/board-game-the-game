@@ -1,6 +1,7 @@
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import { auth } from "../api/services";
 import User from "../models/user";
+import store from "../utils/store";
 type Form = {
   name: string;
   pwd: string;
@@ -43,7 +44,7 @@ export default function useLoginForm({ type }: { type: "login" | "signup" }) {
       .post(loginForm)
       .then((res) => User.create(res.data) as User)
       .then((res) => {
-        // TODO: store auth info
+        store.save("auth", res);
       });
   };
 
