@@ -26,6 +26,7 @@ export default function useLoginForm({ type }: { type: "login" | "signup" }) {
   const handleSubmit = () => (type === "login" ? handleLogin : handleSignup);
 
   const validate = (): string | null => {
+    // TODO: 유효성 내용 추가
     return null;
   };
 
