@@ -4,8 +4,13 @@ type Form = {
   pwd: string;
   confirmPwd: string;
 };
-export default function useLoginForm() {
+export default function useLoginForm({ type }: { type: "login" | "signup" }) {
   const [loginForm, setLoginForm] = useState<Form>({
+    name: "",
+    pwd: "",
+    confirmPwd: "",
+  });
+  const [error, setError] = useState<Form>({
     name: "",
     pwd: "",
     confirmPwd: "",
@@ -17,11 +22,15 @@ export default function useLoginForm() {
       setLoginForm((state) => ({ ...state, [field]: e.currentTarget.value }));
     };
 
-  const handleSubmit = (type: "login" | "signup") =>
-    type === "login" ? handleLogin : handleSignup;
+  const handleSubmit = () => (type === "login" ? handleLogin : handleSignup);
+
+  const validate = (): string | null => {
+    return null;
+  };
 
   const handleLogin = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    validate();
   };
   const handleSignup = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -31,5 +40,6 @@ export default function useLoginForm() {
     handleChange,
     handleSubmit,
     loginForm,
+    error,
   };
 }

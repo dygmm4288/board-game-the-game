@@ -4,7 +4,7 @@ import Login from "../pages/Login";
 import NotFoundPage from "../pages/NotFoundPage";
 import ProtectedRoute from "./ProtectedRoute";
 
-const root = createBrowserRouter([
+const router = createBrowserRouter([
   {
     path: "/",
     element: <Layout />,
@@ -25,4 +25,4 @@ const root = createBrowserRouter([
   },
 ]);
 
-export default root;
+export default router;
