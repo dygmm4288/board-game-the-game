@@ -1,3 +1,3 @@
-import IO from "./crud";
+import authAPI from "./auth";
 
-export const auth = new IO("/v1/auth");
+export const auth = authAPI;
