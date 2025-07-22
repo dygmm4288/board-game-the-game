@@ -1,13 +1,6 @@
-import {
-  Box,
-  Button,
-  Container,
-  Flex,
-  Heading,
-  Text,
-  TextField,
-} from "@radix-ui/themes";
+import { Button, Container, Flex, Heading } from "@radix-ui/themes";
 import { Link } from "react-router-dom";
+import LabelInput from "../components/form/LabelInput";
 import useLoginForm from "../hooks/useLoginForm";
 
 type Props = {
@@ -15,48 +8,41 @@ type Props = {
 };
 
 export default function Login({ type }: Props) {
-  const { loginForm, handleSubmit } = useLoginForm({ type });
+  const { loginForm, handleSubmit, handleChange } = useLoginForm({ type });
+
+  console.log(loginForm);
 
   return (
     <Container p='5'>
       <Flex direction='column' gap='2'>
-        <Heading>로그인</Heading>
+        <Heading>{type === "login" ? "로그인" : "회원가입"}</Heading>
         <form onSubmit={handleSubmit}>
           <Flex as='div' direction='column' gap='5'>
-            <Box>
-              <Text as='label' htmlFor='name'>
-                닉네임
-              </Text>
-              <TextField.Root
-                type='text'
-                id='name'
-                value={loginForm.name}
-                placeholder='닉네임을 입력하세요'
-              />
-            </Box>
-            <Box>
-              <Text as='label' htmlFor='password'>
-                비밀번호
-              </Text>
-              <TextField.Root
-                id='password'
-                type='password'
-                value={loginForm.pwd}
-                placeholder='비밀번호를 입력하세요'
-              />
-            </Box>
+            <LabelInput
+              label='닉네임'
+              id='name'
+              value={loginForm.name}
+              placeholder='닉네임을 입력하세요'
+              onChange={handleChange("name")}
+              type='text'
+            />
+            <LabelInput
+              label='비밀번호'
+              id='password'
+              value={loginForm.pwd}
+              placeholder='비밀번호를 입력하세요'
+              onChange={handleChange("pwd")}
+              type='password'
+            />
             {type === "signup" && (
-              <Box>
-                <Text as='label' htmlFor='password-confirm'>
-                  비밀번호 확인
-                </Text>
-                <TextField.Root
-                  id='password-confirm'
-                  type='password'
-                  value={loginForm.confirmPwd}
-                  placeholder='비밀번호를 다시 입력하세요'
-                />
-              </Box>
+              <LabelInput
+                label='비밀번호 확인'
+                id='password-confirm'
+                value={loginForm.confirmPwd}
+                placeholder='비밀번호를 다시 입력하세요'
+                onChange={handleChange("confirmPwd")}
+                type='password'
+              />
             )}
             <Flex direction='column' gap='5'>
               <Button type='submit'>

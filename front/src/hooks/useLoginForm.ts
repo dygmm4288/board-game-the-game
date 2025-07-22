@@ -19,7 +19,7 @@ export default function useLoginForm({ type }: { type: "login" | "signup" }) {
   const handleChange =
     <K extends keyof Form>(field: K) =>
     (e: ChangeEvent<HTMLInputElement>) => {
-      setLoginForm((state) => ({ ...state, [field]: e.currentTarget.value }));
+      setLoginForm((state) => ({ ...state, [field]: e.target.value }));
     };
 
   const handleSubmit = () => (type === "login" ? handleLogin : handleSignup);
@@ -30,10 +30,12 @@ export default function useLoginForm({ type }: { type: "login" | "signup" }) {
 
   const handleLogin = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    validate();
+    if (validate()) return;
   };
+
   const handleSignup = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (validate()) return;
   };
 
   return {
