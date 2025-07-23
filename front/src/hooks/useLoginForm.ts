@@ -1,11 +1,15 @@
 import { useState, type ChangeEvent, type FormEvent } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { auth } from "../api/services";
+import { getErrorMessage } from "../utils/error";
 type Form = {
   name: string;
   pwd: string;
   confirmPwd: string;
 };
 export default function useLoginForm({ type }: { type: "login" | "signup" }) {
+  const navigate = useNavigate();
   const [loginForm, setLoginForm] = useState<Form>({
     name: "",
     pwd: "",
@@ -49,10 +53,14 @@ export default function useLoginForm({ type }: { type: "login" | "signup" }) {
     auth
       .singUp(loginForm)
       .then(() => {
+        console.log("here");
         // TODO: Toast and redirect
+        toast.success("회원가입 성공");
+        navigate("/login");
       })
       .catch((err) => {
         // TODO: Sign up Error 핸들링
+        toast.error(getErrorMessage(err));
       });
   };
 
