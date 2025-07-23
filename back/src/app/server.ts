@@ -4,6 +4,7 @@ import express, { Express } from "express";
 import path from "path";
 import { AppDataSource } from "../config/db";
 import userRouter from "../routes/user";
+import { errorHandler } from "../utils/middleware";
 
 dotenv.config({ path: path.resolve(__dirname, "../config/.env.local") });
 
@@ -23,6 +24,7 @@ AppDataSource.initialize()
 
     app.use("/auth", userRouter);
 
+    app.use(errorHandler);
     app.listen(PORT, () => {
       console.log(`listening on ${PORT}`);
     });
