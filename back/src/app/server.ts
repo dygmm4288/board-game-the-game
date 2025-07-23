@@ -18,6 +18,8 @@ AppDataSource.initialize()
         origin: WEB_ORIGIN,
       }),
     );
+    app.use(express.json());
+    app.use(express.urlencoded({ extended: true }));
 
     app.use("/auth", userRouter);
 
