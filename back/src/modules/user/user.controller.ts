@@ -1,14 +1,21 @@
 import { Request, Response } from "express";
+import { AssertionError } from "../../utils/error";
 import { asyncHandler } from "../../utils/middleware";
 import { comparePassword } from "./user.logic";
 import User from "./user.service";
 class UserController {
   public signUp = asyncHandler(
     async (req: Request, res: Response): Promise<Response | void> => {
-      const { username, password } = req.body;
+      const {
+        name: username,
+        pwd: password,
+        confirmPwd: passwordConfirm,
+      } = req.body;
 
       if (!username || !password)
         throw new AssertionError("이름과 비밀번호는 필수입니다", 400);
+      if (password !== passwordConfirm)
+        throw new AssertionError("비밀번호가 일치하지 않습니다", 400);
 
       const existUser = await User.getUser(username);
 
@@ -25,7 +32,7 @@ class UserController {
 
   public signIn = asyncHandler(
     async (req: Request, res: Response): Promise<Response | void> => {
-      const { username, password } = req.body;
+      const { user: username, pwd: password } = req.body;
 
       if (!username || !password)
         throw new AssertionError("이름과 비밀번호는 필수입니다", 400);
