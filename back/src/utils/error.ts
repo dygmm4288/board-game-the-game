@@ -1,4 +1,4 @@
-class AssertionError extends Error {
+export class AssertionError extends Error {
   statusCode: number;
   constructor(msg: string, statusCode: number) {
     super(msg);
