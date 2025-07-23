@@ -1,5 +1,6 @@
 import { DataSource } from "typeorm";
 import { GameModel } from "../modules/game/game.model";
+import { UserModel } from "../modules/user/user.model";
 
 export const AppDataSource = new DataSource({
   type: "postgres",
@@ -8,6 +9,6 @@ export const AppDataSource = new DataSource({
   username: "myuser",
   password: "mypassword",
   database: "board_game_db",
-  entities: [GameModel],
+  entities: [GameModel, UserModel],
   synchronize: true,
 });
