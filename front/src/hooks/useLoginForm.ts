@@ -15,11 +15,8 @@ export default function useLoginForm({ type }: { type: "login" | "signup" }) {
     pwd: "",
     confirmPwd: "",
   });
-  const [error, setError] = useState<Form>({
-    name: "",
-    pwd: "",
-    confirmPwd: "",
-  });
+
+  const reset = () => setLoginForm({ name: "", pwd: "", confirmPwd: "" });
 
   const handleChange =
     <K extends keyof Form>(field: K) =>
@@ -42,7 +39,7 @@ export default function useLoginForm({ type }: { type: "login" | "signup" }) {
         // TODO : User token 저장
       })
       .catch((err) => {
-        // TODO: SingIn Error 핸들링
+        toast.error(getErrorMessage(err));
       });
   };
 
@@ -53,13 +50,11 @@ export default function useLoginForm({ type }: { type: "login" | "signup" }) {
     auth
       .singUp(loginForm)
       .then(() => {
-        console.log("here");
-        // TODO: Toast and redirect
         toast.success("회원가입 성공");
         navigate("/login");
+        reset();
       })
       .catch((err) => {
-        // TODO: Sign up Error 핸들링
         toast.error(getErrorMessage(err));
       });
   };
@@ -70,6 +65,5 @@ export default function useLoginForm({ type }: { type: "login" | "signup" }) {
     handleChange,
     handleSubmit,
     loginForm,
-    error,
   };
 }

@@ -20,6 +20,10 @@ class Hash {
   generateHash(data: string) {
     return bcrypt.hash(data, 10);
   }
+
+  compareHash(encoded: string, plain: string) {
+    return bcrypt.compare(plain, encoded);
+  }
 }
 
 export default new Hash();

@@ -1,8 +1,6 @@
 import hash from "../../utils/hash";
 export const comparePassword = async (encodedPwd: string, plainPwd: string) => {
-  const hashedPwd = await hashPassword(plainPwd);
-
-  return hashedPwd === encodedPwd;
+  return await hash.compareHash(encodedPwd, plainPwd);
 };
 
 export const hashPassword = async (plainPwd: string) => {

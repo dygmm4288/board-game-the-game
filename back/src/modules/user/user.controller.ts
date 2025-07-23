@@ -26,20 +26,24 @@ class UserController {
 
       if (!user) throw new AssertionError("서버 오류 발생", 500);
 
-      res.status(201);
+      res.status(201).json();
     },
   );
 
   public signIn = asyncHandler(
     async (req: Request, res: Response): Promise<Response | void> => {
-      const { user: username, pwd: password } = req.body;
+      const { name: username, pwd: password } = req.body;
+
+      console.log(username, password);
 
       if (!username || !password)
         throw new AssertionError("이름과 비밀번호는 필수입니다", 400);
 
       const user = await User.getUser(username);
+      console.log(user);
       if (!user) throw new AssertionError("인증에 실패했습니다", 409);
 
+      console.log(await comparePassword(user.password, password));
       if (!(await comparePassword(user.password, password)))
         throw new AssertionError("인증에 실패했습니다", 401);
 
