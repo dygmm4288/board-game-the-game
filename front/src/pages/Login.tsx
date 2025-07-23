@@ -10,8 +10,6 @@ type Props = {
 export default function Login({ type }: Props) {
   const { loginForm, handleSubmit, handleChange } = useLoginForm({ type });
 
-  console.log(loginForm);
-
   return (
     <Container p='5'>
       <Flex direction='column' gap='2'>

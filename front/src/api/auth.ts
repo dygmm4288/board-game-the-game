@@ -1,6 +1,11 @@
 import type { Axios } from "axios";
 import axiosInstance from ".";
-import { generateFormData } from "./crud";
+
+interface AuthPayload {
+  name: string;
+  pwd: string;
+  confirmPwd?: string;
+}
 
 class AuthAPi {
   axios: Axios;
@@ -9,14 +14,12 @@ class AuthAPi {
     this.axios = axiosInstance;
   }
 
-  signIn(dict: object) {
-    const formData = generateFormData(dict);
-    return this.axios.post("/auth/signin", formData);
+  signIn(payload: AuthPayload) {
+    return this.axios.post("/auth/signin", payload);
   }
 
-  singUp(dict: object) {
-    const formData = generateFormData(dict);
-    return this.axios.post("/auth/signup", formData);
+  singUp(payload: AuthPayload) {
+    return this.axios.post("/auth/signup", payload);
   }
 }
 
