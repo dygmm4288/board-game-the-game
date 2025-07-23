@@ -12,6 +12,13 @@ class Store {
     if (!value) return null;
     return JSON.parse(value);
   }
+  delete(key: string) {
+    const data = this.load(key);
+    if (data) this.storage.removeItem(key);
+  }
 }
 const store = new Store();
 export default store;
+
+export const USER_KEY = "user";
+export const ACCESS_TOKEN_KEY = "accessToken";

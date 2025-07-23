@@ -3,11 +3,14 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { auth } from "../api/services";
 import { getErrorMessage } from "../utils/error";
+import useAuth from "./useAuth";
+
 type Form = {
   name: string;
   pwd: string;
   confirmPwd: string;
 };
+
 export default function useLoginForm({ type }: { type: "login" | "signup" }) {
   const navigate = useNavigate();
   const [loginForm, setLoginForm] = useState<Form>({
@@ -15,6 +18,7 @@ export default function useLoginForm({ type }: { type: "login" | "signup" }) {
     pwd: "",
     confirmPwd: "",
   });
+  const { signIn } = useAuth();
 
   const reset = () => setLoginForm({ name: "", pwd: "", confirmPwd: "" });
 
@@ -36,7 +40,8 @@ export default function useLoginForm({ type }: { type: "login" | "signup" }) {
     auth
       .signIn(loginForm)
       .then((res) => {
-        // TODO : User token 저장
+        const { accessToken, user } = res.data;
+        signIn(user, accessToken);
       })
       .catch((err) => {
         toast.error(getErrorMessage(err));

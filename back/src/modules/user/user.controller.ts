@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { AssertionError } from "../../utils/error";
+import hash from "../../utils/hash";
 import { asyncHandler } from "../../utils/middleware";
 import { comparePassword } from "./user.logic";
 import User from "./user.service";
@@ -34,24 +35,21 @@ class UserController {
     async (req: Request, res: Response): Promise<Response | void> => {
       const { name: username, pwd: password } = req.body;
 
-      console.log(username, password);
-
       if (!username || !password)
         throw new AssertionError("이름과 비밀번호는 필수입니다", 400);
 
       const user = await User.getUser(username);
-      console.log(user);
       if (!user) throw new AssertionError("인증에 실패했습니다", 409);
 
-      console.log(await comparePassword(user.password, password));
       if (!(await comparePassword(user.password, password)))
         throw new AssertionError("인증에 실패했습니다", 401);
 
       const { password: _, ..._withoutPasswordUser } = user;
 
       const data = {
-        accessToken: "",
-        refreshToken: "",
+        accessToken: hash.generateToken({ _withoutPasswordUser }),
+        // TODO : refresh token 내용 이해 후 적용
+        // refreshToken: hash.generateToken({ _withoutPasswordUser }),
         user: _withoutPasswordUser,
       };
 

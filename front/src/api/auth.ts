@@ -1,10 +1,16 @@
 import type { Axios } from "axios";
 import axiosInstance from ".";
+import type User from "../models/user";
 
 interface AuthPayload {
   name: string;
   pwd: string;
   confirmPwd?: string;
+}
+
+interface SignInResponse {
+  accessToken: string;
+  user: Omit<User, "password">;
 }
 
 class AuthAPi {
@@ -15,7 +21,7 @@ class AuthAPi {
   }
 
   signIn(payload: AuthPayload) {
-    return this.axios.post("/auth/signin", payload);
+    return this.axios.post<SignInResponse>("/auth/signin", payload);
   }
 
   singUp(payload: AuthPayload) {
