@@ -10,7 +10,11 @@ class Store {
   load(key: string) {
     const value = this.storage.getItem(key);
     if (!value) return null;
-    return JSON.parse(value);
+    try {
+      return JSON.parse(value);
+    } catch (err) {
+      if (err instanceof SyntaxError) return value;
+    }
   }
   delete(key: string) {
     const data = this.load(key);

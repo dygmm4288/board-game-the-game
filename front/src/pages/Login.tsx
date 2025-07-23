@@ -1,6 +1,7 @@
 import { Button, Container, Flex, Heading } from "@radix-ui/themes";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import LabelInput from "../components/form/LabelInput";
+import useAuth from "../hooks/useAuth";
 import useLoginForm from "../hooks/useLoginForm";
 
 type Props = {
@@ -9,6 +10,13 @@ type Props = {
 
 export default function Login({ type }: Props) {
   const { loginForm, handleSubmit, handleChange } = useLoginForm({ type });
+
+  const { isAuth } = useAuth();
+  const navigate = useNavigate();
+  if (isAuth) {
+    navigate("/");
+    return;
+  }
 
   return (
     <Container p='5'>
