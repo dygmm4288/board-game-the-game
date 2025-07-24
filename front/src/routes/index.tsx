@@ -1,4 +1,5 @@
-import { createBrowserRouter, Outlet } from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
+import Game from "../pages/Game";
 import Layout from "../pages/Layout";
 import Login from "../pages/Login";
 import NotFoundPage from "../pages/NotFoundPage";
@@ -15,7 +16,7 @@ const router = createBrowserRouter([
         path: "game",
         element: (
           <ProtectedRoute>
-            <Outlet />
+            <Game />
           </ProtectedRoute>
         ),
         children: [],
