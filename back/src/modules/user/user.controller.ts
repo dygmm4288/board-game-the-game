@@ -3,6 +3,7 @@ import { AssertionError } from "../../utils/error";
 import hash from "../../utils/hash";
 import { asyncHandler } from "../../utils/middleware";
 import { comparePassword } from "./user.logic";
+import { UserToken } from "./user.model";
 import User from "./user.service";
 class UserController {
   public signUp = asyncHandler(
@@ -47,7 +48,9 @@ class UserController {
       const { password: _, ..._withoutPasswordUser } = user;
 
       const data = {
-        accessToken: hash.generateToken({ _withoutPasswordUser }),
+        accessToken: hash.generateToken({
+          ..._withoutPasswordUser,
+        } as UserToken),
         // TODO : refresh token 내용 이해 후 적용
         // refreshToken: hash.generateToken({ _withoutPasswordUser }),
         user: _withoutPasswordUser,

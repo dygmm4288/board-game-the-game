@@ -4,12 +4,12 @@ import jwt from "jsonwebtoken";
 class Hash {
   constructor() {}
 
-  decodeToken(token: string) {
+  decodeToken<T>(token: string): Promise<T> {
     return new Promise((res, rej) => {
       const JWT_SECRET = process.env.JWT_SECRET!;
       jwt.verify(token, JWT_SECRET, (err, data) => {
         if (err) return rej(err);
-        return res(data);
+        return res(data as T);
       });
     });
   }

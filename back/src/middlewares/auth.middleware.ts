@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { UserToken } from "../modules/user/user.model";
 import hash from "../utils/hash";
 export interface AuthenticateRequest extends Request {
   user?: { id: string; name: string };
@@ -13,10 +14,7 @@ export const authenticate = async (
   if (!token) return res.status(401).json({ detail: "Unauthorized" });
 
   try {
-    const data = (await hash.decodeToken(token)) as {
-      id: string;
-      name: string;
-    };
+    const data = await hash.decodeToken<UserToken>(token);
 
     req.user = data;
 

@@ -27,3 +27,9 @@ export class UserModel extends BaseEntity {
     this.password = await hashPassword(this.password);
   }
 }
+
+export type UserToken = {
+  created_at: Date;
+  id: string;
+  name: string;
+};
