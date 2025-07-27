@@ -5,10 +5,6 @@ export default function GameBoard() {
   const { createGame: startGame, game } = useGame();
 
   const currentPlayer = game?.players?.[game.currentTurn];
-  const stackTops = game?.stacks?.map((stack) => {
-    const top = stack.cards[stack.cards.length - 1];
-    return `${stack.direction}: ${top ?? "비어있음"}`;
-  });
   return (
     <Box>
       <Heading>게임 보드</Heading>
@@ -18,13 +14,8 @@ export default function GameBoard() {
         <Box mt='4'>
           <Text>게임 상태: {game.status}</Text>
           <Text>현재 턴: {currentPlayer?.name ?? "정보 없음"}</Text>
-          <Text>남은 카드 수: {game.deck.length}</Text>
-          <Text>스택 상태:</Text>
-          <Box ml='3'>
-            {stackTops?.map((top, idx) => (
-              <Text key={idx}>- {top}</Text>
-            ))}
-          </Box>
+          <Text>남은 카드 수: {game.deck?.length}</Text>
+          <Text>스택 상태: {JSON.stringify(game.stacks || "")}</Text>
         </Box>
       )}
     </Box>

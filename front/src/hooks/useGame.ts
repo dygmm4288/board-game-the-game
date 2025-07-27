@@ -8,8 +8,11 @@ export default function useGame() {
   const createGame = () => {
     gameApi
       .post()
-      .then((res) => Game.create(res.data) as Game)
-      .then((res) => setGame(res));
+      .then((res) => Game.create(res.data.game) as Game)
+      .then((res) => {
+        console.log(res);
+        setGame(res);
+      });
   };
 
   const playGame = () => {
