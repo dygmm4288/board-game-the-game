@@ -1,4 +1,6 @@
 import { times } from "lodash";
+import { Repository } from "typeorm";
+import { AppDataSource } from "../../config/db";
 import { GameMap } from "../../types/game";
 import { GAME_FIND_ERROR_MAP } from "./constants";
 import {
@@ -16,13 +18,21 @@ import {
   isWinGame,
   shuffleDeck,
 } from "./game.logic";
-import { createGame, createPlayer, Game, Player } from "./game.model";
+import {
+  createGame,
+  createPlayer,
+  Game,
+  GameModel,
+  Player,
+} from "./game.model";
 
 export class GameService {
   private game: Game;
+  private gameRepository: Repository<GameModel>;
 
   constructor(game: Game) {
     this.game = game;
+    this.gameRepository = AppDataSource.getRepository(GameModel);
   }
 
   startGame(): void {
