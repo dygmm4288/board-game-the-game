@@ -1,10 +1,12 @@
 import cors from "cors";
 import dotenv from "dotenv";
 import express, { Express } from "express";
+import { createServer } from "http";
 import path from "path";
 import { AppDataSource } from "../config/db";
 import gameRouter from "../routes/game";
 import userRouter from "../routes/user";
+import { initSockets } from "../sockets";
 import { errorHandler } from "../utils/middleware";
 
 dotenv.config({ path: path.resolve(__dirname, "../config/.env.local") });
@@ -27,6 +29,9 @@ AppDataSource.initialize()
     app.use("/game", gameRouter);
 
     app.use(errorHandler);
+
+    const httpServer = createServer(app);
+    initSockets(httpServer);
     app.listen(PORT, () => {
       console.log(`listening on ${PORT}`);
     });
