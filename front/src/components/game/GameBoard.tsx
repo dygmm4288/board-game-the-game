@@ -12,7 +12,7 @@ export default function GameBoard() {
   return (
     <Box>
       <Heading>게임 보드</Heading>
-      <Button onClick={() => startGame}>게임 시작</Button>
+      <Button onClick={() => startGame()}>게임 시작</Button>
 
       {game && (
         <Box mt='4'>
