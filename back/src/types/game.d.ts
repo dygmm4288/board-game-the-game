@@ -1,4 +1,4 @@
-import { GAME_STATUS } from "../modules/game/constants";
+import { GAME_STATUS } from "../modules/game-engine/constants";
 
 export type GameStatus = (typeof GAME_STATUS)[keyof typeof GAME_STATUS];
 

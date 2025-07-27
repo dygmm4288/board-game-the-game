@@ -116,7 +116,8 @@ export class GameService {
     const players = createPlayer(playerInfos);
     const game = createGame(players);
 
-    return new GameService(game);
+    const gameInstance = new GameService(game);
+    return gameInstance;
   }
 
   // ----------------------

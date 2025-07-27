@@ -1,5 +1,4 @@
 import { uniqueId } from "lodash";
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 import { GameStatus } from "../../types/game";
 import { STACK_DIRECTION } from "./constants";
 
@@ -48,30 +47,3 @@ export const createGame = (players: Player[]): Game => {
 export const createPlayer = (players: Omit<Player, "hand">[]) => {
   return players.map((player) => ({ ...player, hand: [] }));
 };
-
-@Entity("games")
-export class GameModel extends BaseEntity {
-  @PrimaryGeneratedColumn("uuid")
-  id!: string;
-
-  @Column({ type: "timestamptz", default: () => "CURRENT_TIMESTAMP" })
-  created_at!: Date;
-
-  @Column({ type: "varchar", default: "waiting" })
-  status!: "waiting" | "in-progress" | "finished";
-
-  @Column({ type: "integer", default: () => "ARRAY[]::integer[]", array: true })
-  deck?: number[];
-
-  @Column({ type: "jsonb", default: () => "'[]'" })
-  stacks?: Stack[];
-
-  @Column({ type: "integer", default: -1 })
-  currentTurn?: number;
-
-  @Column({ type: "integer", default: -1 })
-  dropCardCount?: number;
-
-  @Column({ type: "integer", default: null, array: true })
-  players?: number[];
-}
