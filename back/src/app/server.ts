@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import express, { Express } from "express";
 import path from "path";
 import { AppDataSource } from "../config/db";
+import gameRouter from "../routes/game";
 import userRouter from "../routes/user";
 import { errorHandler } from "../utils/middleware";
 
@@ -23,6 +24,7 @@ AppDataSource.initialize()
     app.use(express.urlencoded({ extended: true }));
 
     app.use("/auth", userRouter);
+    app.use("/game", gameRouter);
 
     app.use(errorHandler);
     app.listen(PORT, () => {
