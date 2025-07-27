@@ -4,8 +4,10 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import { GameModel } from "../game-engine/game-engine.model";
 import { hashPassword } from "./user.logic";
 
 @Entity("users")
@@ -21,6 +23,9 @@ export class UserModel extends BaseEntity {
 
   @Column({ type: "varchar" })
   password!: string;
+
+  @ManyToOne(() => GameModel, (game) => game.players)
+  game!: GameModel;
 
   @BeforeInsert()
   async hashPassword() {
