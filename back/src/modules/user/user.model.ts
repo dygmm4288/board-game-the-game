@@ -4,6 +4,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
@@ -25,7 +26,11 @@ export class UserModel extends BaseEntity {
   password!: string;
 
   @ManyToOne(() => GameModel, (game) => game.players)
+  @JoinColumn({ name: "gameId" })
   game!: GameModel;
+
+  @Column()
+  gameId!: string;
 
   @BeforeInsert()
   async hashPassword() {
