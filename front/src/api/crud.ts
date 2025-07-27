@@ -1,5 +1,4 @@
 import type { Axios } from "axios";
-import { forEach } from "lodash-es";
 import axiosInstance from ".";
 
 class IO {
@@ -9,10 +8,8 @@ class IO {
     this.axios = axiosInstance;
     this.url = url;
   }
-  post(dict: object) {
-    const formData = generateFormData(dict);
-
-    return this.axios.post(this.url, formData);
+  post(payload?: object) {
+    return this.axios.post(this.url, payload);
   }
 
   get(params) {
@@ -31,15 +28,5 @@ class IO {
     return this.axios.put();
   }
 }
-
-export const generateFormData = (dict: object) => {
-  const formData = new FormData();
-  forEach(dict, (value: string | object | number, key: string) => {
-    if (typeof value === "string") formData.append(key, value);
-    if (typeof value === "number") formData.append(key, String(value));
-    if (typeof value === "object") formData.append(key, JSON.stringify(value));
-  });
-  return formData;
-};
 
 export default IO;
