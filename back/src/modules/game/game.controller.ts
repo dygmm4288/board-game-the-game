@@ -1,11 +1,14 @@
-import { Request, Response } from "express";
+import { Response } from "express";
+import { AuthenticateRequest } from "../../middlewares/auth.middleware";
 import { Player } from "./game.model";
 import { GameService } from "./game.service";
 
 class GameController {
-  public async createGame(req: Request, res: Response) {
-    const players: Omit<Player, "hand">[] = [{ id: "p1", name: "p1" }];
-    const playerId = "p1";
+  public async createGame(req: AuthenticateRequest, res: Response) {
+    if (!req.user) return res.status(401).json({ detail: "Unauthorized" });
+    const user = req.user;
+
+    const players: Omit<Player, "hand">[] = [{ id: user.id, name: user.name }];
     const game = GameService.setupNewGame(players);
 
     res.status(200).json(game);
