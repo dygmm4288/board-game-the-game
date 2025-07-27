@@ -1,5 +1,6 @@
 import { Button, Container, Flex, Heading } from "@radix-ui/themes";
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import LabelInput from "../components/form/LabelInput";
 import useAuth from "../hooks/useAuth";
 import useLoginForm from "../hooks/useLoginForm";
@@ -13,10 +14,12 @@ export default function Login({ type }: Props) {
 
   const { isAuth } = useAuth();
   const navigate = useNavigate();
-  if (isAuth) {
-    navigate("/");
-    return;
-  }
+  const [searchParams] = useSearchParams();
+  const nextPath = searchParams.get("nextPath") ?? "/";
+
+  useEffect(() => {
+    if (isAuth) navigate(nextPath, { replace: true });
+  }, [isAuth, navigate, nextPath]);
 
   return (
     <Container p='5'>
