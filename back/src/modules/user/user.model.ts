@@ -25,12 +25,12 @@ export class UserModel extends BaseEntity {
   @Column({ type: "varchar" })
   password!: string;
 
-  @ManyToOne(() => GameModel, (game) => game.players)
+  @ManyToOne(() => GameModel, (game) => game.players, { nullable: true })
   @JoinColumn({ name: "gameId" })
-  game!: GameModel;
+  game: GameModel | null;
 
-  @Column()
-  gameId!: string;
+  @Column({ nullable: true })
+  gameId: string | null;
 
   @BeforeInsert()
   async hashPassword() {

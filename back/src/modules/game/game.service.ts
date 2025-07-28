@@ -33,10 +33,12 @@ export class GameService {
     const newGame = this.gameRepository.create({
       status: "waiting",
       kind: GAME_KIND.THE_GAME,
-      players: [user],
     });
+    await this.gameRepository.save(newGame);
+    user.game = newGame;
+    await user.save();
 
-    return this.gameRepository.save(newGame);
+    return await this.findGameById(newGame.id);
   }
 
   async joinGame(gameId: string, user: UserModel): Promise<GameModel> {

@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { UserToken } from "../modules/user/user.model";
+import userService from "../modules/user/user.service";
 import hash from "../utils/hash";
 export interface AuthenticateRequest extends Request {
   user?: { id: string; name: string };
@@ -16,7 +17,10 @@ export const authenticate = async (
   try {
     const data = await hash.decodeToken<UserToken>(token);
 
-    req.user = data;
+    const user = await userService.getUser(data.name);
+    if (!user) throw Error();
+
+    req.user = user;
 
     next();
   } catch (err) {
