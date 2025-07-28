@@ -1,29 +1,20 @@
-import { uniqueId } from "lodash";
-import { GameStatus } from "../../types/game";
+import { Player } from "../game-engine/game-engine.model";
 import { STACK_DIRECTION } from "./constants";
 
 export type Direction = (typeof STACK_DIRECTION)[keyof typeof STACK_DIRECTION];
 
-export interface Card {
-  value: number;
-}
 export interface Stack {
   id: string;
   direction: Direction;
   cards: number[];
 }
 
-export interface Player {
-  id: string;
-  name: string;
+export interface GamePlayer extends Player {
   hand: number[];
   handCnt?: number;
 }
 
-export interface Game {
-  id: string;
-  createdAt: Date;
-  status: GameStatus;
+export interface TheGame {
   players: Player[];
   stacks: Stack[];
   deck: number[];
@@ -31,11 +22,8 @@ export interface Game {
   dropCardCount: number;
 }
 
-export const createGame = (players: Player[]): Game => {
+export const createTheGame = (players: Player[]): TheGame => {
   return {
-    id: uniqueId(),
-    createdAt: new Date(),
-    status: "waiting",
     deck: [],
     stacks: [],
     currentTurn: -1,
@@ -44,6 +32,6 @@ export const createGame = (players: Player[]): Game => {
   };
 };
 
-export const createPlayer = (players: Omit<Player, "hand">[]) => {
+export const createPlayer = (players: Omit<GamePlayer, "hand">[]) => {
   return players.map((player) => ({ ...player, hand: [] }));
 };

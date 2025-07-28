@@ -1,8 +1,7 @@
 import { Response } from "express";
 import { AuthenticateRequest } from "../../middlewares/auth.middleware";
+import { Player } from "../game-engine/game-engine.model";
 import { UserToken } from "../user/user.model";
-import { Player } from "./game.model";
-import { GameService } from "./game.service";
 
 class GameController {
   public async createGame(req: AuthenticateRequest, res: Response) {
@@ -10,7 +9,7 @@ class GameController {
     const user = req.user as UserToken;
 
     const players: Omit<Player, "hand">[] = [{ id: user.id, name: user.name }];
-    const game = GameService.setupNewGame(players);
+    const game = TheGameService.setupNewGame(players);
 
     res.status(200).json(game);
   }

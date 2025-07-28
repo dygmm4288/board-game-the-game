@@ -1,8 +1,10 @@
 import { times } from "lodash";
 import { Repository } from "typeorm";
 import { AppDataSource } from "../../config/db";
-import { GameMap } from "../../types/game";
-import { GAME_FIND_ERROR_MAP } from "./constants";
+import { GameStatus } from "../../types/game";
+import { GAME_KIND } from "../game-engine/constants";
+import { GameModel } from "../game-engine/game-engine.model";
+import { UserModel } from "../user/user.model";
 import {
   canPlaceCard,
   dealCards,
@@ -18,49 +20,75 @@ import {
   isWinGame,
   shuffleDeck,
 } from "./game.logic";
-import {
-  createGame,
-  createPlayer,
-  Game,
-  GameModel,
-  Player,
-} from "./game.model";
+import { TheGame } from "./game.model";
 
 export class GameService {
-  private game: Game;
   private gameRepository: Repository<GameModel>;
 
-  constructor(game: Game) {
-    this.game = game;
+  constructor() {
     this.gameRepository = AppDataSource.getRepository(GameModel);
   }
 
-  startGame(): void {
+  async createGame(user: UserModel): Promise<GameModel> {
+    const newGame = this.gameRepository.create({
+      status: "waiting",
+      kind: GAME_KIND.THE_GAME,
+      players: [user],
+    });
+
+    return this.gameRepository.save(newGame);
+  }
+
+  async joinGame(gameId: string, user: UserModel): Promise<GameModel> {
+    const game = await this.findGameById(gameId);
+
+    game.players.push(user);
+
+    return this.gameRepository.save(game);
+  }
+
+  async startGame(gameId: string): Promise<GameModel> {
+    const gameModel = await this.findGameById(gameId);
+    const gameInfo = gameModel.gameInfo;
+
     const deck = shuffleDeck(generateDeck());
     const stacks = generateInitialStacks();
-    const handSize = getHandSize(this.game.players);
+    const handSize = getHandSize(gameInfo.players);
     const [playersWithHands, remainingDeck] = dealCards(
       deck,
-      this.game.players,
+      gameInfo.players,
       handSize,
     );
 
-    this.game.deck = remainingDeck;
-    this.game.players = playersWithHands;
-    this.game.currentTurn = 0;
-    this.game.status = "in-progress";
-    this.game.stacks = stacks;
-    this.game.dropCardCount = 0;
+    gameModel.gameInfo = {
+      ...gameInfo,
+      deck: remainingDeck,
+      players: playersWithHands,
+      currentTurn: 0,
+      stacks: stacks,
+      dropCardCount: 0,
+    };
+    gameModel.status = "in-progress" as GameStatus;
+
+    return this.gameRepository.save(gameModel);
   }
 
-  playCard(stackId: string, playerId: string, card: number): void {
-    if (this.game.status !== "in-progress")
+  async playCard(
+    gameId: string,
+    stackId: string,
+    playerId: string,
+    card: number,
+  ): Promise<GameModel> {
+    const gameModel = await this.findGameById(gameId);
+    const gameInfo = gameModel.gameInfo;
+
+    if (gameModel.status !== "in-progress")
       throw new Error("플레이 중이 아닙니다");
 
-    const player = this.findById("players", playerId);
-    const stack = this.findById("stacks", stackId);
+    const player = this.findPlayerInGame(gameInfo, playerId);
+    const stack = this.findStackInGame(gameInfo, stackId);
 
-    isValidPlayer(this.game, playerId);
+    isValidPlayer(gameInfo, playerId);
 
     if (!player.hand.includes(card))
       throw new Error("존재하지 않은 카드입니다");
@@ -68,39 +96,59 @@ export class GameService {
 
     const { updatedPlayer, updatedStack } = dropCard(player, stack, card);
 
-    this.game.players = this.mapBy("players", playerId, updatedPlayer);
-    this.game.stacks = this.mapBy("stacks", stackId, updatedStack);
+    gameModel.gameInfo = {
+      ...gameInfo,
+      players: gameInfo.players.map((p) =>
+        p.id === playerId ? updatedPlayer : p,
+      ),
+      stacks: gameInfo.stacks.map((s) => (s.id === stackId ? updatedStack : s)),
+      dropCardCount: gameInfo.dropCardCount + 1,
+    };
 
-    this.game.dropCardCount = this.game.dropCardCount + 1;
+    return this.gameRepository.save(gameModel);
   }
 
-  endTurn(playerId: string) {
-    isValidPlayer(this.game, playerId);
-    isValidDropCard(this.game.dropCardCount, this.game.deck);
+  async endTurn(gameId: string, playerId: string): Promise<GameModel> {
+    const gameModel = await this.findGameById(gameId);
+    const gameInfo = gameModel.gameInfo;
 
-    const playerIndex = this.findByIndex("players", playerId);
+    isValidPlayer(gameInfo, playerId);
+    isValidDropCard(gameInfo.dropCardCount, gameInfo.deck);
 
-    times(this.game.dropCardCount, () => {
-      const player = this.findById("players", playerId);
-      const { updatedDeck, updatedPlayer } = drawCard(this.game.deck, player);
+    let updatedGameInfo = { ...gameInfo };
 
-      this.game.deck = updatedDeck;
-      this.game.players[playerIndex] = updatedPlayer;
+    times(gameInfo.dropCardCount, () => {
+      const player = this.findPlayerInGame(updatedGameInfo, playerId);
+      const { updatedDeck, updatedPlayer } = drawCard(
+        updatedGameInfo.deck,
+        player,
+      );
+      updatedGameInfo.deck = updatedDeck;
+      updatedGameInfo.players = updatedGameInfo.players.map((p) =>
+        p.id === playerId ? updatedPlayer : p,
+      );
     });
 
-    this.game.dropCardCount = 0;
-    if (isWinGame(this.game) || isLoseGame(this.game))
-      this.game.status = "finished";
-    else {
-      const nextTurn = getNextTurnIndex(this.game);
-      if (nextTurn !== -1) this.game.currentTurn = nextTurn;
+    updatedGameInfo.dropCardCount = 0;
+
+    if (isWinGame(updatedGameInfo) || isLoseGame(updatedGameInfo)) {
+      gameModel.status = "finished" as GameStatus;
+    } else {
+      const nextTurn = getNextTurnIndex(updatedGameInfo);
+      if (nextTurn !== -1) updatedGameInfo.currentTurn = nextTurn;
     }
+
+    gameModel.gameInfo = updatedGameInfo;
+    return this.gameRepository.save(gameModel);
   }
 
-  getGameView(playerId: string) {
-    const view: Game = {
-      ...this.game,
-      players: this.game.players.map((player) =>
+  async getGameView(gameId: string, playerId: string): Promise<TheGame> {
+    const gameModel = await this.findGameById(gameId);
+    const gameInfo = gameModel.gameInfo;
+
+    const view: TheGame = {
+      ...gameInfo,
+      players: gameInfo.players.map((player) =>
         player.id === playerId
           ? player
           : { ...player, hand: [], handCnt: player.hand.length },
@@ -109,37 +157,22 @@ export class GameService {
 
     return view;
   }
-  // ----------------------
-  // static methods
-  // ----------------------
-  static setupNewGame(playerInfos: Omit<Player, "hand">[]): GameService {
-    const players = createPlayer(playerInfos);
-    const game = createGame(players);
 
-    const gameInstance = new GameService(game);
-    return gameInstance;
+  private async findGameById(gameId: string): Promise<GameModel> {
+    const game = await this.gameRepository.findOneBy({ id: gameId });
+    if (!game) throw new Error("게임을 찾을 수 없습니다.");
+    return game;
   }
 
-  // ----------------------
-  // util
-  // ----------------------
-  findBy<K extends keyof GameMap>(key: K) {
-    return this.game[key].find.bind(this.game[key]);
+  private findPlayerInGame(gameInfo: TheGame, playerId: string) {
+    const player = gameInfo.players.find((p) => p.id === playerId);
+    if (!player) throw new Error("플레이어를 찾을 수 없습니다.");
+    return player;
   }
 
-  findById<K extends keyof GameMap>(key: K, id: string): GameMap[K] {
-    const value = this.findBy(key)((v) => v.id === id);
-    if (!value) throw new Error(GAME_FIND_ERROR_MAP[key]);
-    return value;
-  }
-
-  findByIndex<K extends keyof GameMap>(key: K, id: string) {
-    const index = this.game[key].findIndex((value) => value.id === id);
-    if (index === -1) throw new Error(GAME_FIND_ERROR_MAP[key]);
-    return index;
-  }
-
-  mapBy<K extends keyof GameMap>(key: K, id: string, value: GameMap[K]) {
-    return this.game[key].map((v) => (v.id === id ? value : v));
+  private findStackInGame(gameInfo: TheGame, stackId: string) {
+    const stack = gameInfo.stacks.find((s) => s.id === stackId);
+    if (!stack) throw new Error("스택을 찾을 수 없습니다.");
+    return stack;
   }
 }

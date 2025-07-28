@@ -4,8 +4,8 @@ import {
   generateInitialStacks,
   getHandSize,
 } from "../game.logic";
-import { Game, Player } from "../game.model";
-import { GameService } from "../game.service";
+import { Player, TheGame } from "../game.model";
+import { TheGameService } from "../game.service";
 
 describe("startGame", () => {
   it("게임이 정상적으로 초기화 돼야한다", () => {
@@ -14,7 +14,7 @@ describe("startGame", () => {
       { id: "p2", name: "p2", hand: [] },
     ];
 
-    const game: Game = {
+    const game: TheGame = {
       id: "g1",
       createdAt: new Date(),
       currentTurn: 0,
@@ -25,7 +25,7 @@ describe("startGame", () => {
       dropCardCount: 0,
     };
 
-    const service = new GameService(game);
+    const service = new TheGameService(game);
 
     service.startGame();
 
@@ -54,8 +54,8 @@ describe("startGame", () => {
 });
 
 describe("playCard", () => {
-  let service: GameService;
-  let game: Game;
+  let service: TheGameService;
+  let game: TheGame;
   beforeEach(() => {
     const players: Player[] = [
       { id: "p1", name: "p1", hand: [] },
@@ -72,7 +72,7 @@ describe("playCard", () => {
       status: "waiting",
       dropCardCount: 0,
     };
-    service = new GameService(game);
+    service = new TheGameService(game);
     service.startGame();
   });
 
@@ -138,8 +138,8 @@ describe("playCard", () => {
 });
 
 describe("endTurn", () => {
-  let game: Game;
-  let service: GameService;
+  let game: TheGame;
+  let service: TheGameService;
 
   beforeEach(() => {
     game = {
@@ -152,7 +152,7 @@ describe("endTurn", () => {
       stacks: generateInitialStacks(),
       status: "in-progress",
     };
-    service = new GameService(game);
+    service = new TheGameService(game);
   });
 
   it("보충 덱이 충분할 때는 카드를 2개 이상 내려놓지 않으면 오류를 반환해야한다.", () => {
@@ -234,7 +234,7 @@ describe("endTurn", () => {
 });
 
 describe("현재 플레이어 여부 확인", () => {
-  const game: Game = {
+  const game: TheGame = {
     deck: [],
     createdAt: new Date(),
     currentTurn: 0,
@@ -247,7 +247,7 @@ describe("현재 플레이어 여부 확인", () => {
     stacks: [{ id: "asc-1", cards: [], direction: STACK_DIRECTION.ASC }],
     status: "in-progress",
   };
-  const service = new GameService(game);
+  const service = new TheGameService(game);
 
   it("endTurn을 실행할 때 현재 플레이어가 아니면 오류를 반환해야 한다.", () => {
     expect(() => service.endTurn("p2")).toThrow(/올바르지 않은 플레이어입니다/);

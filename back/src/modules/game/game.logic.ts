@@ -4,7 +4,7 @@ import {
   HAND_SIZE_BY_PLAYER_COUNT,
   STACK_DIRECTION,
 } from "./constants";
-import { Game, Player, Stack } from "./game.model";
+import { Player, Stack, TheGame } from "./game.model";
 
 export const shuffleDeck = (deck: number[]): number[] => {
   return shuffle(deck);
@@ -134,14 +134,14 @@ export const isValidDropCard = (
     throw new Error("최소 2개 이상 내려놓아야 합니다");
 };
 
-export const isValidPlayer = (game: Game, playerId: string) => {
+export const isValidPlayer = (game: TheGame, playerId: string) => {
   const { currentTurn } = game;
   const index = game.players.findIndex((player) => player.id === playerId);
 
   if (index !== currentTurn) throw new Error("올바르지 않은 플레이어입니다");
 };
 
-export const getNextTurnIndex = (game: Game): number => {
+export const getNextTurnIndex = (game: TheGame): number => {
   const playerSize = game.players.length;
   const index = game.players
     .map((_, idx) => (idx + 1) % playerSize)
@@ -150,11 +150,11 @@ export const getNextTurnIndex = (game: Game): number => {
   return index;
 };
 
-export const isWinGame = (game: Game): boolean => {
+export const isWinGame = (game: TheGame): boolean => {
   return game.players.every((player) => player.hand.length === 0);
 };
 
-export const isLoseGame = (game: Game): boolean => {
+export const isLoseGame = (game: TheGame): boolean => {
   return game.players.every(
     (player) =>
       !hasPlayableCard(player, game.stacks) || player.hand.length === 0,

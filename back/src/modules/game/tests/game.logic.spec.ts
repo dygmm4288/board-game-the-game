@@ -11,7 +11,7 @@ import {
   hasPlayableCard,
   shuffleDeck,
 } from "../game.logic";
-import { Game, Player, Stack } from "../game.model";
+import { Player, Stack, TheGame } from "../game.model";
 
 describe("shuffle deck", () => {
   it("주어진 개수만큼 덱을 구성해야한다.", () => {
@@ -231,7 +231,7 @@ describe("getNextTurnIndex", () => {
   ];
 
   cases.forEach(({ currentTurn, expected }) => {
-    const game: Game = {
+    const game: TheGame = {
       id: "g-1",
       createdAt: new Date(),
       currentTurn,
