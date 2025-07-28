@@ -8,7 +8,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { GameModel } from "../game-engine/game-engine.model";
+import { GameModel } from "../gameEngine/gameEngine.model";
 import { hashPassword } from "./user.logic";
 
 @Entity("users")

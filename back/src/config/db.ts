@@ -1,5 +1,5 @@
 import { DataSource } from "typeorm";
-import { GameModel } from "../modules/game-engine/game-engine.model";
+import { GameModel } from "../modules/gameEngine/gameEngine.model";
 import { UserModel } from "../modules/user/user.model";
 
 export const AppDataSource = new DataSource({

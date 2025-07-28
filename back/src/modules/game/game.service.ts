@@ -2,8 +2,8 @@ import { times } from "lodash";
 import { Repository } from "typeorm";
 import { AppDataSource } from "../../config/db";
 import { GameStatus } from "../../types/game";
-import { GAME_KIND } from "../game-engine/constants";
-import { GameModel } from "../game-engine/game-engine.model";
+import { GAME_KIND } from "../gameEngine/constants";
+import { GameModel } from "../gameEngine/gameEngine.model";
 import { UserModel } from "../user/user.model";
 import {
   canPlaceCard,
@@ -34,6 +34,7 @@ export class GameService {
       status: "waiting",
       kind: GAME_KIND.THE_GAME,
     });
+
     await this.gameRepository.save(newGame);
     user.game = newGame;
     await user.save();
@@ -48,6 +49,8 @@ export class GameService {
 
     return this.gameRepository.save(game);
   }
+
+  async exitGame() {}
 
   async startGame(gameId: string): Promise<GameModel> {
     const gameModel = await this.findGameById(gameId);

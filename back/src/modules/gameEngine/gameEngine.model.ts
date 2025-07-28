@@ -37,8 +37,8 @@ export class GameModel extends BaseEntity {
   @OneToMany(() => UserModel, (user) => user.game, { eager: true })
   players!: UserModel[];
 
-  @Column({ type: "jsonb" })
-  gameInfo!: GameInfoMap[keyof GameInfoMap];
+  @Column({ type: "jsonb", nullable: true })
+  gameInfo: GameInfoMap[keyof GameInfoMap] | null = null;
 
   @Column({ type: "enum", enum: GAME_KIND })
   kind!: GameKind;

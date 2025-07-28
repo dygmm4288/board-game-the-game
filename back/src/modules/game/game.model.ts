@@ -1,4 +1,4 @@
-import { Player } from "../game-engine/game-engine.model";
+import { Player } from "../gameEngine/gameEngine.model";
 import { STACK_DIRECTION } from "./constants";
 
 export type Direction = (typeof STACK_DIRECTION)[keyof typeof STACK_DIRECTION];
