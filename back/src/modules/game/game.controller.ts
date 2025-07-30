@@ -13,6 +13,7 @@ class TheGameController {
 
     const game = await gameEngineService.createGame(user, GAME_KIND.THE_GAME);
 
+    // BUG: game.players의 user.game이 순환해서 json으로 만드는 과정에서 오류가 발생함.
     console.log(game);
     res.status(200).json(game);
   }
