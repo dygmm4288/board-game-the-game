@@ -26,7 +26,7 @@ export class UserModel extends BaseEntity {
   password!: string;
 
   @ManyToOne(() => GameModel, (game) => game.players, { nullable: true })
-  @JoinColumn({ name: "gameId" })
+  @JoinColumn()
   game: GameModel | null = null;
 
   @BeforeInsert()

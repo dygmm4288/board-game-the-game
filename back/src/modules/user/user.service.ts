@@ -26,6 +26,11 @@ export class UserService {
     const user = await this.userRepository.findOneBy({ name });
     return user;
   }
+
+  public async putAttr(model: UserModel) {
+    const ret = await this.userRepository.save(model);
+    return ret;
+  }
 }
 
 export default new UserService();

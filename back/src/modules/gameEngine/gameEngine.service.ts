@@ -15,16 +15,14 @@ export class GameEngineService {
     const newGame = this.gameRepository.create({
       status: "waiting",
       kind,
-      players: [user],
+      players: [],
     });
 
     user.game = newGame;
+    newGame.players.push(user);
 
     await this.gameRepository.save(newGame);
-    await user.save();
-
-    console.log(user, newGame);
-    return await this.findGameById(newGame.id);
+    return newGame;
   }
 
   async joinGame(gameId: string, user: UserModel): Promise<GameModel> {

@@ -34,7 +34,10 @@ export class GameModel extends BaseEntity {
   @Column({ type: "enum", enum: GAME_STATUS })
   status!: GameStatus;
 
-  @OneToMany(() => UserModel, (user) => user.game, { eager: true })
+  @OneToMany(() => UserModel, (user) => user.game, {
+    eager: true,
+    cascade: ["insert", "update"],
+  })
   players!: UserModel[];
 
   @Column({ type: "jsonb", nullable: true })

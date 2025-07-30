@@ -1,7 +1,7 @@
+import path from "path";
 import { DataSource } from "typeorm";
-import { GameModel } from "../modules/gameEngine/gameEngine.model";
-import { UserModel } from "../modules/user/user.model";
 
+console.log(path.join(__dirname, "../modules/**/*.model.js"));
 export const AppDataSource = new DataSource({
   type: "postgres",
   host: "localhost",
@@ -9,6 +9,6 @@ export const AppDataSource = new DataSource({
   username: "myuser",
   password: "mypassword",
   database: "board_game_db",
-  entities: [GameModel, UserModel],
+  entities: [path.join(__dirname, "../modules/**/*.model.js")],
   synchronize: true,
 });
