@@ -18,10 +18,10 @@ export class GameEngineService {
       players: [],
     });
 
-    user.game = newGame;
     newGame.players.push(user);
 
     await this.gameRepository.save(newGame);
+    user.game = this.gameRepository.getId(newGame);
     return newGame;
   }
 
