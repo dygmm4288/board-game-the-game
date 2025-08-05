@@ -27,13 +27,11 @@ class UserController {
       const user = await User.postUser({ name: username, password });
 
       if (!user) throw new AssertionError("서버 오류 발생", 500);
-
-      res.status(201).json();
     },
   );
 
   public signIn = asyncHandler(
-    async (req: Request, res: Response): Promise<Response | void> => {
+    async (req: Request, res: Response): Promise<Object | void> => {
       const { name: username, pwd: password } = req.body;
 
       if (!username || !password)
@@ -56,7 +54,7 @@ class UserController {
         user: _withoutPasswordUser,
       };
 
-      res.status(201).json(data);
+      return data;
     },
   );
 }

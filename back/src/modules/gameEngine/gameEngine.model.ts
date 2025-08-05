@@ -1,5 +1,4 @@
 import {
-  BaseEntity,
   Column,
   CreateDateColumn,
   Entity,
@@ -8,6 +7,8 @@ import {
   UpdateDateColumn,
 } from "typeorm";
 import { GameInfoMap, GameKind, GameStatus } from "../../types/game";
+import { Hide } from "../../utils/serializer";
+import { BaseModel } from "../base/base.model";
 import { UserModel } from "../user/user.model";
 import { GAME_KIND, GAME_STATUS } from "./constants";
 
@@ -27,7 +28,7 @@ export interface BaseGame {
 }
 
 @Entity({ name: "games" })
-export class GameModel extends BaseEntity {
+export class GameModel extends BaseModel {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
@@ -38,6 +39,7 @@ export class GameModel extends BaseEntity {
     eager: true,
     cascade: ["insert", "update"],
   })
+  @Hide()
   players!: UserModel[];
 
   @Column({ type: "jsonb", nullable: true })

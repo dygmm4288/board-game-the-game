@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { mapValues } from "lodash";
 import { AssertionError } from "./error";
 
 type AsyncFunction = (
@@ -9,7 +10,25 @@ type AsyncFunction = (
 
 export const asyncHandler = (fn: AsyncFunction) => {
   return (req: Request, res: Response, next: NextFunction) => {
-    fn(req, res, next).catch(next);
+    fn(req, res, next)
+      .then((result) => {
+        if (result === undefined || result === null) return res.sendStatus(201);
+
+        if (Array.isArray(result)) {
+          const data = result.map((r) => r?.hideEntity() || r);
+          return res.status(200).json(data);
+        }
+
+        const data = mapValues(result, (value) => {
+          if (Array.isArray(value))
+            return value.map((v) => v?.hideEntity() || v);
+          if (value?.hideEntity) return value.hideEntity();
+          return value;
+        });
+
+        return res.status(200).json(data);
+      })
+      .catch(next);
   };
 };
 

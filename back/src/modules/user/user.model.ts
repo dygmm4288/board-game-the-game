@@ -1,5 +1,4 @@
 import {
-  BaseEntity,
   BeforeInsert,
   Column,
   CreateDateColumn,
@@ -8,11 +7,13 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import { Hide } from "../../utils/serializer";
+import { BaseModel } from "../base/base.model";
 import { GameModel } from "../gameEngine/gameEngine.model";
 import { hashPassword } from "./user.logic";
 
 @Entity("users")
-export class UserModel extends BaseEntity {
+export class UserModel extends BaseModel {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
@@ -23,6 +24,7 @@ export class UserModel extends BaseEntity {
   name!: string;
 
   @Column({ type: "varchar" })
+  @Hide()
   password!: string;
 
   @ManyToOne(() => GameModel, (game) => game.players, { nullable: true })
