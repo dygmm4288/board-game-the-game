@@ -99,7 +99,12 @@ export class GameService {
 
     let updatedGameInfo = { ...gameInfo };
 
-    times(gameInfo.dropCardCount, () => {
+    const drawCardCount = Math.min(
+      gameInfo.dropCardCount,
+      gameInfo.deck.length,
+    );
+
+    times(drawCardCount, () => {
       const player = this.findPlayerInGame(updatedGameInfo, playerId);
       const { updatedDeck, updatedPlayer } = drawCard(
         updatedGameInfo.deck,
