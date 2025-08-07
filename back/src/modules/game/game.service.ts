@@ -23,8 +23,9 @@ import { TheGame } from "./game.model";
 export class GameService {
   private gameRepository: Repository<GameEngineModel>;
 
-  constructor() {
-    this.gameRepository = AppDataSource.getRepository(GameEngineModel);
+  constructor(repository?: Repository<GameEngineModel>) {
+    this.gameRepository =
+      repository ?? AppDataSource.getRepository(GameEngineModel);
   }
 
   async exitGame() {}
@@ -134,6 +135,12 @@ export class GameService {
 
     gameModel.gameInfo = updatedGameInfo;
     return this.gameRepository.save(gameModel);
+  }
+
+  async getGameStatus(gameId: string) {
+    const gameModel = await this.findGameById(gameId);
+
+    return gameModel.status;
   }
 
   async getGameView(gameId: string, playerId: string): Promise<TheGame> {
