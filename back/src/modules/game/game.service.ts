@@ -123,7 +123,11 @@ export class GameService {
       gameModel.status = "finished" as GameStatus;
     } else {
       const nextTurn = getNextTurnIndex(updatedGameInfo);
-      if (nextTurn !== -1) updatedGameInfo.currentTurn = nextTurn;
+      if (nextTurn === -1) {
+        gameModel.status = "finished";
+      } else {
+        updatedGameInfo.currentTurn = nextTurn;
+      }
     }
 
     gameModel.gameInfo = updatedGameInfo;
