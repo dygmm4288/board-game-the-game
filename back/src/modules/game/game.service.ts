@@ -99,6 +99,7 @@ export class GameService {
 
     let updatedGameInfo = { ...gameInfo };
 
+    // 덱이 부족하면 남은 카드만 보충
     const drawCardCount = Math.min(
       gameInfo.dropCardCount,
       gameInfo.deck.length,
