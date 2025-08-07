@@ -28,7 +28,7 @@ export interface BaseGame {
 }
 
 @Entity({ name: "games" })
-export class GameModel extends BaseModel {
+export class GameEngineModel extends BaseModel {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 

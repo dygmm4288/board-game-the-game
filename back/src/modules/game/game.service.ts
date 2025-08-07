@@ -2,9 +2,7 @@ import { times } from "lodash";
 import { Repository } from "typeorm";
 import { AppDataSource } from "../../config/db";
 import { GameStatus } from "../../types/game";
-import { GAME_KIND } from "../gameEngine/constants";
-import { GameModel } from "../gameEngine/gameEngine.model";
-import { UserModel } from "../user/user.model";
+import { GameEngineModel } from "../gameEngine/gameEngine.model";
 import {
   canPlaceCard,
   dealCards,
@@ -23,38 +21,17 @@ import {
 import { TheGame } from "./game.model";
 
 export class GameService {
-  private gameRepository: Repository<GameModel>;
+  private gameRepository: Repository<GameEngineModel>;
 
   constructor() {
-    this.gameRepository = AppDataSource.getRepository(GameModel);
-  }
-
-  async createGame(user: UserModel): Promise<GameModel> {
-    const newGame = this.gameRepository.create({
-      status: "waiting",
-      kind: GAME_KIND.THE_GAME,
-    });
-
-    await this.gameRepository.save(newGame);
-    user.game = newGame;
-    await user.save();
-
-    return await this.findGameById(newGame.id);
-  }
-
-  async joinGame(gameId: string, user: UserModel): Promise<GameModel> {
-    const game = await this.findGameById(gameId);
-
-    game.players.push(user);
-
-    return this.gameRepository.save(game);
+    this.gameRepository = AppDataSource.getRepository(GameEngineModel);
   }
 
   async exitGame() {}
 
-  async startGame(gameId: string): Promise<GameModel> {
+  async startGame(gameId: string): Promise<GameEngineModel> {
     const gameModel = await this.findGameById(gameId);
-    const gameInfo = gameModel.gameInfo;
+    const gameInfo = gameModel.gameInfo as TheGame;
 
     const deck = shuffleDeck(generateDeck());
     const stacks = generateInitialStacks();
@@ -83,9 +60,9 @@ export class GameService {
     stackId: string,
     playerId: string,
     card: number,
-  ): Promise<GameModel> {
+  ): Promise<GameEngineModel> {
     const gameModel = await this.findGameById(gameId);
-    const gameInfo = gameModel.gameInfo;
+    const gameInfo = gameModel.gameInfo as TheGame;
 
     if (gameModel.status !== "in-progress")
       throw new Error("플레이 중이 아닙니다");
@@ -113,9 +90,9 @@ export class GameService {
     return this.gameRepository.save(gameModel);
   }
 
-  async endTurn(gameId: string, playerId: string): Promise<GameModel> {
+  async endTurn(gameId: string, playerId: string): Promise<GameEngineModel> {
     const gameModel = await this.findGameById(gameId);
-    const gameInfo = gameModel.gameInfo;
+    const gameInfo = gameModel.gameInfo as TheGame;
 
     isValidPlayer(gameInfo, playerId);
     isValidDropCard(gameInfo.dropCardCount, gameInfo.deck);
@@ -149,7 +126,7 @@ export class GameService {
 
   async getGameView(gameId: string, playerId: string): Promise<TheGame> {
     const gameModel = await this.findGameById(gameId);
-    const gameInfo = gameModel.gameInfo;
+    const gameInfo = gameModel.gameInfo as TheGame;
 
     const view: TheGame = {
       ...gameInfo,
@@ -163,7 +140,7 @@ export class GameService {
     return view;
   }
 
-  private async findGameById(gameId: string): Promise<GameModel> {
+  private async findGameById(gameId: string): Promise<GameEngineModel> {
     const game = await this.gameRepository.findOneBy({ id: gameId });
     if (!game) throw new Error("게임을 찾을 수 없습니다.");
     return game;

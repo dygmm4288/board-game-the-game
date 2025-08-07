@@ -15,14 +15,14 @@ export interface GamePlayer extends Player {
 }
 
 export interface TheGame {
-  players: Player[];
+  players: GamePlayer[];
   stacks: Stack[];
   deck: number[];
   currentTurn: number;
   dropCardCount: number;
 }
 
-export const createTheGame = (players: Player[]): TheGame => {
+export const createTheGame = (players: GamePlayer[]): TheGame => {
   return {
     deck: [],
     stacks: [],

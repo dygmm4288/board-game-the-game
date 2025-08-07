@@ -1,17 +1,17 @@
 import { Repository } from "typeorm";
 import { AppDataSource } from "../../config/db";
 import { GameKind } from "../../types/game";
-import { GameModel } from "../gameEngine/gameEngine.model";
+import { GameEngineModel } from "../gameEngine/gameEngine.model";
 import { UserModel } from "../user/user.model";
 
 export class GameEngineService {
-  private gameRepository: Repository<GameModel>;
+  private gameRepository: Repository<GameEngineModel>;
 
   constructor() {
-    this.gameRepository = AppDataSource.getRepository(GameModel);
+    this.gameRepository = AppDataSource.getRepository(GameEngineModel);
   }
 
-  async createGame(user: UserModel, kind: GameKind): Promise<GameModel> {
+  async createGame(user: UserModel, kind: GameKind): Promise<GameEngineModel> {
     const newGame = this.gameRepository.create({
       status: "waiting",
       kind,
@@ -25,7 +25,7 @@ export class GameEngineService {
     return newGame;
   }
 
-  async joinGame(gameId: string, user: UserModel): Promise<GameModel> {
+  async joinGame(gameId: string, user: UserModel): Promise<GameEngineModel> {
     const game = await this.findGameById(gameId);
 
     game.players.push(user);

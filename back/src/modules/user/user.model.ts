@@ -9,7 +9,7 @@ import {
 } from "typeorm";
 import { Hide } from "../../utils/serializer";
 import { BaseModel } from "../base/base.model";
-import { GameModel } from "../gameEngine/gameEngine.model";
+import { GameEngineModel } from "../gameEngine/gameEngine.model";
 import { hashPassword } from "./user.logic";
 
 @Entity("users")
@@ -27,9 +27,9 @@ export class UserModel extends BaseModel {
   @Hide()
   password!: string;
 
-  @ManyToOne(() => GameModel, (game) => game.players, { nullable: true })
+  @ManyToOne(() => GameEngineModel, (game) => game.players, { nullable: true })
   @JoinColumn()
-  game: GameModel | null = null;
+  game: GameEngineModel | null = null;
 
   @BeforeInsert()
   async hashPassword() {
