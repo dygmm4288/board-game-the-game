@@ -145,11 +145,17 @@ export const isValidPlayer = (game: TheGame, playerId: string) => {
 
 export const getNextTurnIndex = (game: TheGame): number => {
   const playerSize = game.players.length;
-  const index = game.players
-    .map((_, idx) => (idx + 1) % playerSize)
-    .find((idx) => game.players[idx].hand.length !== 0);
-  if (!index) return -1;
-  return index;
+  let idx = (game.currentTurn + 1) % playerSize;
+  let tried = 0;
+
+  while (tried < playerSize) {
+    const player = game.players[idx];
+    if (player.hand.length > 0) return idx;
+    idx = (idx + 1) % playerSize;
+    tried++;
+  }
+
+  return -1;
 };
 
 export const isWinGame = (game: TheGame): boolean => {
