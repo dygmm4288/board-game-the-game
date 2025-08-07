@@ -131,11 +131,9 @@ export const isValidDropCard = (
   dropCardCount: number,
   deck: number[],
 ): void => {
-  const isEmptyDeck = deck.length === 0;
-  if (isEmptyDeck && dropCardCount < 1)
-    throw new Error("최소 1개를 내려놓아야 합니다");
-  if (!isEmptyDeck && dropCardCount < 2)
-    throw new Error("최소 2개 이상 내려놓아야 합니다");
+  const minDropCount = deck.length === 0 ? 1 : 2;
+  if (minDropCount > dropCardCount)
+    throw new Error(`최소 ${minDropCount}개를 내려놓아야 합니다`);
 };
 
 export const isValidPlayer = (game: TheGame, playerId: string) => {
