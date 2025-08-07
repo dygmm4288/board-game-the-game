@@ -94,6 +94,8 @@ export class GameService {
     const gameModel = await this.findGameById(gameId);
     const gameInfo = gameModel.gameInfo as TheGame;
 
+    if (gameModel.status !== "in-progress")
+      throw new Error("플레이 중이 아닙니다");
     isValidPlayer(gameInfo, playerId);
     isValidDropCard(gameInfo.dropCardCount, gameInfo.deck);
 
