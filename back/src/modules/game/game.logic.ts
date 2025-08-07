@@ -4,7 +4,7 @@ import {
   HAND_SIZE_BY_PLAYER_COUNT,
   STACK_DIRECTION,
 } from "./constants";
-import { Player, Stack, TheGame } from "./game.model";
+import { GamePlayer, Stack, TheGame } from "./game.model";
 
 export const shuffleDeck = (deck: number[]): number[] => {
   return shuffle(deck);
@@ -18,16 +18,16 @@ export const canPlaceCard = (stack: Stack, card: number): boolean => {
   return topCard > card || topCard + 10 === card;
 };
 
-export const getHandSize = (players: Player[]): number => {
+export const getHandSize = (players: GamePlayer[]): number => {
   const playerSize = players.length;
   return HAND_SIZE_BY_PLAYER_COUNT[playerSize] ?? DEFAULT_HAND_SIZE;
 };
 
 export const dealCards = (
   deck: number[],
-  players: Player[],
+  players: GamePlayer[],
   size: number,
-): [Player[], number[]] => {
+): [GamePlayer[], number[]] => {
   const _deck = [...deck];
   const newPlayers = players.map((player) => {
     const hand = _deck.splice(0, size);
@@ -64,10 +64,10 @@ export const getUpdatedStack = (stack: Stack, card: number): Stack => {
 };
 
 export const getUpdatedPlayer = (
-  player: Player,
+  player: GamePlayer,
   card: number,
   type: "add" | "remove",
-): Player => {
+): GamePlayer => {
   const newPlayer = cloneDeep(player);
   const _isCardInHand = isCardInHand(player, card);
 
@@ -80,21 +80,21 @@ export const getUpdatedPlayer = (
   return newPlayer;
 };
 
-export const isCardInHand = (player: Player, card: number) => {
+export const isCardInHand = (player: GamePlayer, card: number) => {
   return player.hand.some((v) => v === card);
 };
 
-export const hasPlayableCard = (player: Player, Stacks: Stack[]) => {
+export const hasPlayableCard = (player: GamePlayer, Stacks: Stack[]) => {
   return player.hand.some((card) =>
     Stacks.some((stack) => canPlaceCard(stack, card)),
   );
 };
 
 export const dropCard = (
-  player: Player,
+  player: GamePlayer,
   stack: Stack,
   card: number,
-): { updatedPlayer: Player; updatedStack: Stack } => {
+): { updatedPlayer: GamePlayer; updatedStack: Stack } => {
   return {
     updatedPlayer: getUpdatedPlayer(player, card, "remove"),
     updatedStack: getUpdatedStack(stack, card),
@@ -103,8 +103,12 @@ export const dropCard = (
 
 export const drawCard = (
   deck: number[],
-  player: Player,
-): { updatedDeck: number[]; updatedPlayer: Player; card: number | null } => {
+  player: GamePlayer,
+): {
+  updatedDeck: number[];
+  updatedPlayer: GamePlayer;
+  card: number | null;
+} => {
   const updatedDeck = [...deck];
 
   if (deck.length === 0)
