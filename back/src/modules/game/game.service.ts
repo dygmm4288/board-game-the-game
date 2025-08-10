@@ -137,6 +137,10 @@ export class GameService {
     return this.gameRepository.save(gameModel);
   }
 
+  async getGameInfo(gameId: string) {
+    return (await this.findGameById(gameId)).gameInfo;
+  }
+
   async getGameStatus(gameId: string) {
     const gameModel = await this.findGameById(gameId);
 

@@ -1,55 +1,66 @@
 import { STACK_DIRECTION } from "../constants";
-import { generateInitialStacks } from "../game.logic";
-import { TheGame } from "../game.model";
+import {
+  generateDeck,
+  generateInitialStacks,
+  getHandSize,
+} from "../game.logic";
+import { GamePlayer, TheGame } from "../game.model";
 import { GameService } from "../game.service";
 
-// describe("startGame", () => {
-//   it("게임이 정상적으로 초기화 돼야한다", () => {
-//     const players: GamePlayer[] = [
-//       { id: "p1", name: "p1", hand: [] },
-//       { id: "p2", name: "p2", hand: [] },
-//     ];
+describe("startGame", () => {
+  it("게임이 정상적으로 초기화 돼야한다", async () => {
+    const players: GamePlayer[] = [
+      { id: "p1", name: "p1", hand: [] },
+      { id: "p2", name: "p2", hand: [] },
+    ];
 
-//     const game: TheGame = {
-//       currentTurn: 0,
-//       deck: [],
-//       players,
-//       stacks: [],
-//       dropCardCount: 0,
-//     };
+    const game: TheGame = {
+      currentTurn: 0,
+      deck: [],
+      players,
+      stacks: [],
+      dropCardCount: 0,
+    };
+    const gameId = "game-1";
 
-//     const mockRepository = {
-//       findOneBy: jest.fn().mockImplementationOnce(({ id }) => ({})),
-//       save: jest.fn().mockImplementation((game) => game),
-//     };
+    const mockRepository = {
+      findOneBy: jest.fn().mockResolvedValue({
+        id: gameId,
+        gameInfo: game,
+        status: "in-progress",
+      }),
+      save: jest.fn().mockImplementation((game) => game),
+    };
 
-//     const service = new GameService(mockRepository as any);
+    const service = new GameService(mockRepository as any);
 
-//     service.startGame();
+    service.startGame(gameId);
+    const gameInfo = (await service.getGameInfo(gameId)) as TheGame;
 
-//     const handSize = getHandSize(game.players);
-//     const totalCards: number[] = [
-//       ...game.players.reduce<number[]>((a, c) => [...a, ...c.hand], []),
-//       ...game.deck,
-//     ];
+    const handSize = getHandSize(gameInfo.players);
+    const totalCards: number[] = [
+      ...gameInfo.players.reduce<number[]>((a, c) => [...a, ...c.hand], []),
+      ...gameInfo.deck,
+    ];
 
-//     expect(game.dropCardCount).toBe(0);
-//     expect(game.currentTurn).toBe(0);
-//     expect(game.players.length).toBe(2);
-//     game.players.forEach((p) => expect(p.hand.length).toBe(handSize));
+    expect(gameInfo.dropCardCount).toBe(0);
+    expect(gameInfo.currentTurn).toBe(0);
+    expect(gameInfo.players.length).toBe(2);
+    gameInfo.players.forEach((p) => expect(p.hand.length).toBe(handSize));
 
-//     expect(game.deck.length).toBe(98 - handSize * 2);
-//     expect(game.stacks.length).toBe(4);
-//     expect(
-//       game.stacks.filter((v) => v.direction === STACK_DIRECTION.ASC).length,
-//     ).toBe(2);
-//     expect(
-//       game.stacks.filter((v) => v.direction === STACK_DIRECTION.DESC).length,
-//     ).toBe(2);
-//     expect(game.status).toBe("in-progress");
-//     expect(totalCards.sort((a, b) => a - b)).toEqual(generateDeck());
-//   });
-// });
+    expect(gameInfo.deck.length).toBe(98 - handSize * 2);
+    expect(gameInfo.stacks.length).toBe(4);
+    expect(
+      gameInfo.stacks.filter((v) => v.direction === STACK_DIRECTION.ASC).length,
+    ).toBe(2);
+    expect(
+      gameInfo.stacks.filter((v) => v.direction === STACK_DIRECTION.DESC)
+        .length,
+    ).toBe(2);
+    expect(await service.getGameStatus(gameId)).toBe("in-progress");
+    expect(totalCards.sort((a, b) => a - b)).toEqual(generateDeck());
+  });
+});
 
 // describe("playCard", () => {
 //   let service: GameService;
@@ -240,7 +251,7 @@ describe("endTurn", () => {
   });
 });
 
-describe.only("현재 플레이어 여부 확인", () => {
+describe("현재 플레이어 여부 확인", () => {
   const gameId = "game-1";
   const game = {
     currentTurn: 0,
