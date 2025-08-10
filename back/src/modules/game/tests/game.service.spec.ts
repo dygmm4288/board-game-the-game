@@ -135,7 +135,7 @@ import { GameService } from "../game.service";
 //   });
 // });
 
-describe.only("endTurn", () => {
+describe("endTurn", () => {
   let game: TheGame;
   let service: GameService;
   let mockRepository: any;
@@ -240,29 +240,38 @@ describe.only("endTurn", () => {
   });
 });
 
-// describe("현재 플레이어 여부 확인", () => {
-//   const game: TheGame = {
-//     deck: [],
-//     createdAt: new Date(),
-//     currentTurn: 0,
-//     players: [
-//       { id: "p1", name: "p1", hand: [] },
-//       { id: "p2", name: "p2", hand: [] },
-//     ],
-//     dropCardCount: 0,
-//     id: "game-1",
-//     stacks: [{ id: "asc-1", cards: [], direction: STACK_DIRECTION.ASC }],
-//     status: "in-progress",
-//   };
-//   const service = new GameService(game);
+describe.only("현재 플레이어 여부 확인", () => {
+  const gameId = "game-1";
+  const game = {
+    currentTurn: 0,
+    deck: [],
+    dropCardCount: 0,
+    players: [
+      { id: "p1", name: "P1", hand: [] },
+      { id: "p2", name: "P2", hand: [] },
+    ],
+    stacks: generateInitialStacks(),
+  };
+  const mockRepository = {
+    findOneBy: jest.fn().mockResolvedValue({
+      id: gameId,
+      gameInfo: game,
+      status: "in-progress",
+    }),
+    save: jest.fn().mockImplementation((gm) => Promise.resolve(gm)),
+  } as any;
 
-//   it("endTurn을 실행할 때 현재 플레이어가 아니면 오류를 반환해야 한다.", () => {
-//     expect(() => service.endTurn("p2")).toThrow(/올바르지 않은 플레이어입니다/);
-//   });
+  const service = new GameService(mockRepository);
 
-//   it("playCard를 실행할 때 현재 플레이어가 아니면 오류를 반환해야 한다.", () => {
-//     expect(() => service.playCard("asc-1", "p2", 0)).toThrow(
-//       /올바르지 않은 플레이어입니다/,
-//     );
-//   });
-// });
+  it("endTurn을 실행할 때 현재 플레이어가 아니면 오류를 반환해야 한다.", () => {
+    expect(() => service.endTurn(gameId, "p2")).rejects.toThrow(
+      /올바르지 않은 플레이어입니다/,
+    );
+  });
+
+  it("playCard를 실행할 때 현재 플레이어가 아니면 오류를 반환해야 한다.", () => {
+    expect(() => service.playCard(gameId, "asc-1", "p2", 0)).rejects.toThrow(
+      /올바르지 않은 플레이어입니다/,
+    );
+  });
+});
