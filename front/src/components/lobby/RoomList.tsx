@@ -1,20 +1,15 @@
+import { Grid, Text } from "@radix-ui/themes";
+import useRoom from "../../hooks/useRoom";
 import RoomCard from "./RoomCard";
 
 export default function RoomList() {
+  const { rooms } = useRoom();
+  if (rooms.length === 0) return <Text>생성된 방이 없습니다.</Text>;
   return (
-    <ul>
-      <li>
-        <RoomCard gameId={"game-1"} />
-      </li>
-      <li>
-        <RoomCard gameId={"game-2"} />
-      </li>
-      <li>
-        <RoomCard gameId={"game-3"} />
-      </li>
-      <li>
-        <RoomCard gameId={"game-4"} />
-      </li>
-    </ul>
+    <Grid>
+      {rooms.map((room) => (
+        <RoomCard gameId={room.id} />
+      ))}
+    </Grid>
   );
 }
