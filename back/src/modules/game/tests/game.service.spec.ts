@@ -62,89 +62,107 @@ describe("startGame", () => {
   });
 });
 
-// describe("playCard", () => {
-//   let service: GameService;
-//   let game: TheGame;
-//   beforeEach(() => {
-//     const players: GamePlayer[] = [
-//       { id: "p1", name: "p1", hand: [] },
-//       { id: "p2", name: "p2", hand: [] },
-//     ];
+describe("playCard", () => {
+  let service: GameService;
+  let game: TheGame;
+  let store: { id: string; gameInfo: TheGame; status: string };
+  const gameId = "game-1";
 
-//     game = {
-//       id: "g1",
-//       createdAt: new Date(),
-//       currentTurn: 0,
-//       deck: [],
-//       players,
-//       stacks: [],
-//       status: "waiting",
-//       dropCardCount: 0,
-//     };
-//     service = new GameService(game);
-//     service.startGame();
-//   });
+  beforeEach(async () => {
+    const players: GamePlayer[] = [
+      { id: "p1", name: "p1", hand: [] },
+      { id: "p2", name: "p2", hand: [] },
+    ];
 
-//   it("플레이 중이 아니라면 오류를 반환해야 한다.", () => {
-//     game.status = "waiting";
-//     expect(() => service.playCard("asc-1", "p1", 0)).toThrow(
-//       /플레이 중이 아닙니다/,
-//     );
+    game = {
+      currentTurn: 0,
+      deck: [],
+      players,
+      stacks: [],
+      dropCardCount: 0,
+    };
 
-//     game.status = "finished";
-//     expect(() => service.playCard("asc-1", "p1", 0)).toThrow(
-//       /플레이 중이 아닙니다/,
-//     );
-//   });
+    store = {
+      id: gameId,
+      gameInfo: game,
+      status: "in-progress",
+    };
 
-//   it("플레이어가 존재하지 않으면 오류를 반환해야 한다.", () => {
-//     expect(() => service.playCard("asc-1", "p3", -1)).toThrow(
-//       /플레이어가 없습니다/,
-//     );
-//   });
+    const mockRepository = {
+      findOneBy: jest.fn().mockResolvedValue(store),
+      save: jest.fn().mockImplementation((game) => game),
+    } as any;
 
-//   it("스택이 존재하지 않으면 오류를 반환해야 한다.", () => {
-//     expect(() => service.playCard("asc-3", "p1", -1)).toThrow(
-//       /스택이 없습니다/,
-//     );
-//   });
+    service = new GameService(mockRepository);
 
-//   it("플레이어가 카드를 가지고 있지 않으면 오류를 반환해야 한다.", () => {
-//     expect(() => service.playCard("asc-1", "p1", -1)).toThrow(
-//       /존재하지 않은 카드입니다/,
-//     );
-//   });
+    service.startGame(gameId);
+    game = (await service.getGameInfo(gameId)) as TheGame;
+  });
 
-//   it("카드를 올릴 수 없으면 오류를 반환해야 한다.", () => {
-//     const player = game.players[0];
-//     game.stacks[0].cards = [99];
-//     expect(() => service.playCard("asc-1", "p1", player.hand[0])).toThrow(
-//       /카드를 올릴 수 없습니다/,
-//     );
-//   });
+  it("플레이 중이 아니라면 오류를 반환해야 한다.", () => {
+    store.status = "waiting";
+    expect(() => service.playCard(gameId, "asc-1", "p1", 0)).rejects.toThrow(
+      /플레이 중이 아닙니다/,
+    );
 
-//   it("카드가 스택에 올라가야 하고 플레이어의 손에는 해당 카드가 없어야 한다.", () => {
-//     const player = game.players[0];
-//     const card = player.hand[0];
-//     const handSize = player.hand.length;
-//     service.playCard("asc-1", "p1", card);
+    store.status = "finished";
+    expect(() => service.playCard(gameId, "asc-1", "p1", 0)).rejects.toThrow(
+      /플레이 중이 아닙니다/,
+    );
+  });
 
-//     expect(game.players[0].hand).not.toContain(card);
-//     expect(game.stacks[0].cards).toContain(card);
+  it("플레이어가 존재하지 않으면 오류를 반환해야 한다.", () => {
+    expect(() => service.playCard(gameId, "asc-1", "p3", -1)).rejects.toThrow(
+      /플레이어를 찾을 수 없습니다/,
+    );
+  });
 
-//     expect(game.players[0].hand.length).toBe(handSize - 1);
-//     expect(game.stacks[0].cards.length).toBeGreaterThan(1);
-//   });
+  it("스택이 존재하지 않으면 오류를 반환해야 한다.", () => {
+    expect(() => service.playCard(gameId, "asc-3", "p1", -1)).rejects.toThrow(
+      /스택을 찾을 수 없습니다/,
+    );
+  });
 
-//   it("카드를 드롭하면 drop card cnt가 1씩 증가해야 한다", () => {
-//     game.players[0].hand = [2, 3, 4, 5, 6, 7];
-//     service.playCard("asc-1", "p1", game.players[0].hand[0]);
-//     expect(game.dropCardCount).toBe(1);
+  it("플레이어가 카드를 가지고 있지 않으면 오류를 반환해야 한다.", () => {
+    expect(() => service.playCard(gameId, "asc-1", "p1", -1)).rejects.toThrow(
+      /존재하지 않은 카드입니다/,
+    );
+  });
 
-//     service.playCard("asc-1", "p1", game.players[0].hand[0]);
-//     expect(game.dropCardCount).toBe(2);
-//   });
-// });
+  it("카드를 올릴 수 없으면 오류를 반환해야 한다.", () => {
+    const player = game.players[0];
+    game.stacks[0].cards = [99];
+    expect(() =>
+      service.playCard(gameId, "asc-1", "p1", player.hand[0]),
+    ).rejects.toThrow(/카드를 올릴 수 없습니다/);
+  });
+
+  it("카드가 스택에 올라가야 하고 플레이어의 손에는 해당 카드가 없어야 한다.", async () => {
+    const player = game.players[0];
+    const card = player.hand[0];
+    const handSize = player.hand.length;
+    service.playCard(gameId, "asc-1", "p1", card);
+
+    game = (await service.getGameInfo(gameId)) as TheGame;
+
+    expect(game.players[0].hand).not.toContain(card);
+    expect(game.stacks[0].cards).toContain(card);
+
+    expect(game.players[0].hand.length).toBe(handSize - 1);
+    expect(game.stacks[0].cards.length).toBeGreaterThan(1);
+  });
+
+  it("카드를 드롭하면 drop card cnt가 1씩 증가해야 한다", async () => {
+    game.players[0].hand = [2, 3, 4, 5, 6, 7];
+    service.playCard(gameId, "asc-1", "p1", game.players[0].hand[0]);
+    game = (await service.getGameInfo(gameId)) as TheGame;
+    expect(game.dropCardCount).toBe(1);
+
+    service.playCard(gameId, "asc-1", "p1", game.players[0].hand[0]);
+    game = (await service.getGameInfo(gameId)) as TheGame;
+    expect(game.dropCardCount).toBe(2);
+  });
+});
 
 describe("endTurn", () => {
   let game: TheGame;
@@ -188,7 +206,7 @@ describe("endTurn", () => {
     );
   });
 
-  it("drop card cnt 만큼 덱에서 카드를 보충하고, drop card cnt 초기화, 턴 전환이 일어난다", () => {
+  it("drop card cnt 만큼 덱에서 카드를 보충하고, drop card cnt 초기화, 턴 전환이 일어난다", async () => {
     game.deck = [10, 20, 30, 40];
     game.players[0].hand = [5];
     game.dropCardCount = 2;
@@ -197,6 +215,7 @@ describe("endTurn", () => {
     const prevDeckSize = game.deck.length;
 
     service.endTurn(gameId, "p1");
+    game = (await service.getGameInfo(gameId)) as TheGame;
 
     expect(game.dropCardCount).toBe(0);
     expect(game.currentTurn).toBe(0);
@@ -204,7 +223,7 @@ describe("endTurn", () => {
     expect(game.deck.length).toBe(prevDeckSize - 2);
   });
 
-  it("턴 전환이 일어날 경우 더이상 낼 카드가 없는 플레이어를 제외하고 다음 플레이어가 나와야 한다", () => {
+  it("턴 전환이 일어날 경우 더이상 낼 카드가 없는 플레이어를 제외하고 다음 플레이어가 나와야 한다", async () => {
     game.deck = [10, 20, 30, 40];
     game.players[0].hand = [5];
     game.players = [
@@ -215,13 +234,14 @@ describe("endTurn", () => {
     game.dropCardCount = 2;
 
     service.endTurn(gameId, "p1");
+    game = (await service.getGameInfo(gameId)) as TheGame;
 
     const player = game.players[game.currentTurn];
 
     expect(player.id).toBe("p3");
   });
 
-  it("마지막 턴을 기점으로 게임 상태가 변해야 한다.", () => {
+  it("마지막 턴을 기점으로 게임 상태가 변해야 한다.", async () => {
     game.deck = [];
     game.players[0].hand = [];
     game.players = [
@@ -232,11 +252,12 @@ describe("endTurn", () => {
     game.dropCardCount = 2;
 
     service.endTurn(gameId, "p1");
+    const status = await service.getGameStatus(gameId);
 
-    expect(async () => await service.getGameStatus(gameId)).toBe("finished");
+    expect(status).toBe("finished");
   });
 
-  it("마지막 턴을 종료할 때 더 이상 게임을 진행할 수 없다면 게임상태가 끝나야 한다.", () => {
+  it("마지막 턴을 종료할 때 더 이상 게임을 진행할 수 없다면 게임상태가 끝나야 한다.", async () => {
     game.deck = [];
     game.players[0].hand = [];
     game.players = [game.players[0], { id: "p2", name: "p2", hand: [5] }];
@@ -246,8 +267,9 @@ describe("endTurn", () => {
     game.dropCardCount = 1;
 
     service.endTurn(gameId, "p1");
+    const status = await service.getGameStatus(gameId);
 
-    expect(async () => await service.getGameStatus(gameId)).toBe("finished");
+    expect(status).toBe("finished");
   });
 });
 
