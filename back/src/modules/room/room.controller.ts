@@ -5,12 +5,13 @@ import { asyncHandler } from "../../utils/middleware";
 import { GAME_KIND } from "../gameEngine/constants";
 import gameEngineService from "../gameEngine/gameEngine.service";
 import { UserModel } from "../user/user.model";
+import { CreateRoomDto } from "./room.dto";
 import roomService from "./room.service";
 
 class RoomController {
   public createRoom = asyncHandler(async (req: AuthenticateRequest) => {
     const user = req.user as UserModel;
-    const { kind, slug, capacity } = req.body;
+    const { kind, slug, capacity } = CreateRoomDto.parse(req.body);
 
     if (!kind || !slug || !capacity)
       throw new AssertionError("올바르지 않은 접근입니다", 400);
