@@ -15,6 +15,7 @@
     - .model: schema
     - .controller: HTTP endpoint 핸들러
     - .service: createRoom 등 룸 생성 서비스
+    - .dto
 - /config : 환경변수 등 설정
 - routes : api
 - types : type
