@@ -7,6 +7,14 @@
     - .logic: 게임 규칙
     - .controller: HTTP endpoint 핸들러
     - .service: 카드 분배, 턴 처리 등
+  - gameEngine: 게임 엔진 도메인
+    - .model: schema
+    - .logic:
+    - .service: createGame 등 게임 엔진 생성 서비스
+  - room: 룸 도메인
+    - .model: schema
+    - .controller: HTTP endpoint 핸들러
+    - .service: createRoom 등 룸 생성 서비스
 - /config : 환경변수 등 설정
 - routes : api
 - types : type
