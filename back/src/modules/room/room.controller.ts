@@ -13,9 +13,6 @@ class RoomController {
     const user = req.user as UserModel;
     const { kind, slug, capacity } = CreateRoomDto.parse(req.body);
 
-    if (!kind || !slug || !capacity)
-      throw new AssertionError("올바르지 않은 접근입니다", 400);
-
     const isGameKind = (x: unknown): x is GameKind =>
       Object.values(GAME_KIND).includes(x as GameKind);
 
