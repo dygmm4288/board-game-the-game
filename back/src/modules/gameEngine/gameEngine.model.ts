@@ -36,7 +36,7 @@ export class GameEngineModel extends BaseModel {
   status!: GameStatus;
 
   @OneToMany(() => UserModel, (user) => user.game, {
-    eager: true,
+    eager: false,
     cascade: ["insert", "update"],
   })
   @Hide()
