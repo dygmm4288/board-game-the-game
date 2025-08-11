@@ -1,5 +1,6 @@
 import { Repository } from "typeorm";
 import { AppDataSource } from "../../config/db";
+import { ListParams } from "../../types/api";
 import { GameEngineModel } from "../gameEngine/gameEngine.model";
 import { UserModel } from "../user/user.model";
 import { RoomModel } from "./room.model";
@@ -29,8 +30,24 @@ class RoomService {
     return room;
   }
 
-  async getRooms() {
-    return;
+  async getRooms({ page, limit }: ListParams) {
+    page = Math.max(1, Number(page ?? 1));
+    limit = Number(limit ?? 20);
+
+    const skip = (page - 1) * limit;
+
+    const qb = this.roomRepository
+      .createQueryBuilder()
+      .select()
+      .orderBy("createdAt", "DESC")
+      .skip(skip)
+      .take(limit);
+    const [items, total] = await qb.getManyAndCount();
+
+    return {
+      items,
+      total,
+    };
   }
 }
 

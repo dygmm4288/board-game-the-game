@@ -27,7 +27,12 @@ class RoomController {
 
   public joinRoom = asyncHandler(async (req: AuthenticateRequest) => {});
 
-  public getRooms = asyncHandler(async (req: AuthenticateRequest) => {});
+  public getRooms = asyncHandler(async (req: AuthenticateRequest) => {
+    const { page = "1", limit = "20" } = req.query;
+    const rooms = await roomService.getRooms({ page, limit });
+
+    return rooms;
+  });
 }
 
 export default new RoomController();
