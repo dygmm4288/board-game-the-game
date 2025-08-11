@@ -4,7 +4,7 @@ import { GameKind } from "../../types/game";
 import { GameEngineModel } from "../gameEngine/gameEngine.model";
 import { UserModel } from "../user/user.model";
 
-export class GameEngineService {
+class GameEngineService {
   private gameRepository: Repository<GameEngineModel>;
 
   constructor() {
@@ -41,3 +41,5 @@ export class GameEngineService {
     return game;
   }
 }
+
+export default new GameEngineService();

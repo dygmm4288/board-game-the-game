@@ -17,10 +17,6 @@ export class RoomModel extends BaseModel {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
-  @Column({ type: "text" })
-  @Index()
-  title!: string;
-
   @OneToOne(() => UserModel, { eager: false, nullable: false })
   @Index()
   author!: UserModel;
