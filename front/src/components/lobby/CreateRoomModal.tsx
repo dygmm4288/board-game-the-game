@@ -1,6 +1,6 @@
-import { Button, Dialog, Flex, Text } from "@radix-ui/themes";
+import { Button, Dialog, Flex } from "@radix-ui/themes";
 import LabelInput from "../form/LabelInput";
-import Select from "../form/Select";
+import LabelSelect from "../form/LabelSelect";
 
 const CreateRoomDialog = () => {
   const capacityOptions = ["1", "2", "3", "4", "5"];
@@ -25,10 +25,11 @@ const CreateRoomDialog = () => {
               placeholder='방 이름을 입력하세요'
             />
             <label>
-              <Text as='div' size='2' mb='1' weight='bold'>
-                게임인원
-              </Text>
-              <Select options={capacityOptions} defaultValue='1' />
+              <LabelSelect
+                label='게임 인원'
+                options={capacityOptions}
+                defaultValue='1'
+              />
             </label>
           </Flex>
           <Flex gap='3' mt='4' justify='end'>

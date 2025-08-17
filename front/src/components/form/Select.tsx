@@ -1,15 +1,15 @@
 import { Select as SelectRadix } from "@radix-ui/themes";
 
-type Option = {
+export type Option = {
   label: string;
   value: string;
 };
 
-type Props = {
+export type SelectProps = {
   options: string[] | Option[];
   defaultValue?: string;
 };
-const Select = ({ options, defaultValue }: Props) => {
+const Select = ({ options, defaultValue }: SelectProps) => {
   if (
     defaultValue &&
     !options.find((option) => {
