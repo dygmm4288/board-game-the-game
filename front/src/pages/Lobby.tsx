@@ -1,9 +1,9 @@
 import { Badge, Button, Flex, Text } from "@radix-ui/themes";
 import RoomList from "../components/lobby/RoomList";
-import useRoom from "../hooks/useRoom";
+import { useRoom } from "../queries/room";
 
 export default function Lobby() {
-  const { rooms } = useRoom();
+  const { data: rooms } = useRoom();
 
   return (
     <section>
@@ -15,7 +15,7 @@ export default function Lobby() {
         <Text size='2' color='gray'>
           공개 방
         </Text>
-        <Badge color='indigo'>{rooms.length}</Badge>
+        <Badge color='indigo'>{rooms ? rooms.length : 0}</Badge>
         <RoomList />
       </Flex>
     </section>
