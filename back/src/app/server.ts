@@ -4,9 +4,7 @@ import express, { Express } from "express";
 import { createServer } from "http";
 import path from "path";
 import { AppDataSource } from "../config/db";
-import gameRouter from "../routes/game";
-import roomRouter from "../routes/room";
-import userRouter from "../routes/user";
+import registerRoute from "../routes";
 import { initSockets } from "../sockets";
 import { errorHandler } from "../utils/middleware";
 
@@ -26,9 +24,10 @@ AppDataSource.initialize()
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
 
-    app.use("/auth", userRouter);
-    app.use("/game", gameRouter);
-    app.use("/room", roomRouter);
+    // ---------------
+    // 라우트 등록
+    // ---------------
+    registerRoute(app);
 
     app.use(errorHandler);
 
