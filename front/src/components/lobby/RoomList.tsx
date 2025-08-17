@@ -1,9 +1,16 @@
 import { Grid, Text } from "@radix-ui/themes";
+import { useEffect } from "react";
 import useRoom from "../../hooks/useRoom";
 import RoomCard from "./RoomCard";
 
 export default function RoomList() {
-  const { rooms } = useRoom();
+  const { rooms, fetchRoom } = useRoom();
+
+  useEffect(() => {
+    console.log("call here");
+    fetchRoom();
+  }, []);
+
   if (rooms.length === 0) return <Text>생성된 방이 없습니다.</Text>;
   return (
     <Grid>

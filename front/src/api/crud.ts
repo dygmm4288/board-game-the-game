@@ -13,7 +13,7 @@ class IO {
   }
 
   get(params) {
-    return this.axios.get();
+    return this.axios.get(this.url, params);
   }
 
   get_one(id) {

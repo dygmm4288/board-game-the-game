@@ -36,18 +36,13 @@ class RoomService {
 
     const skip = (page - 1) * limit;
 
-    const qb = this.roomRepository
-      .createQueryBuilder()
-      .select()
-      .orderBy("createdAt", "DESC")
-      .skip(skip)
-      .take(limit);
+    const qb = this.roomRepository.createQueryBuilder().select();
+    qb.orderBy(`${qb.alias}.createdAt`, "DESC").skip(skip).take(limit);
     const [items, total] = await qb.getManyAndCount();
 
-    return {
-      items,
-      total,
-    };
+    if (items) return items.map((item) => ({ ...item, queryTotal: total }));
+
+    return [];
   }
 }
 

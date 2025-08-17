@@ -5,6 +5,7 @@ import { createServer } from "http";
 import path from "path";
 import { AppDataSource } from "../config/db";
 import gameRouter from "../routes/game";
+import roomRouter from "../routes/room";
 import userRouter from "../routes/user";
 import { initSockets } from "../sockets";
 import { errorHandler } from "../utils/middleware";
@@ -27,6 +28,7 @@ AppDataSource.initialize()
 
     app.use("/auth", userRouter);
     app.use("/game", gameRouter);
+    app.use("/room", roomRouter);
 
     app.use(errorHandler);
 
