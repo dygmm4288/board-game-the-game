@@ -1,5 +1,5 @@
 import { useState } from "react";
-import gameApi from "../api/game";
+import { gameApi } from "../api/services";
 import Game from "../models/game";
 
 export default function useGame() {

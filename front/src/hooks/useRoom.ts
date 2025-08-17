@@ -1,5 +1,5 @@
 import { useState } from "react";
-import room from "../api/room";
+import { roomApi } from "../api/services";
 
 const useRoom = () => {
   const [rooms, setRooms] = useState([
@@ -10,7 +10,7 @@ const useRoom = () => {
   ]);
 
   const fetchRoom = () => {
-    room
+    roomApi
       .get({})
       .then((res) => {
         setRooms(res.data);
