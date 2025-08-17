@@ -4,6 +4,7 @@ import LabelSelect from "../form/LabelSelect";
 
 const CreateRoomDialog = () => {
   const capacityOptions = ["1", "2", "3", "4", "5"];
+  const gameKindOptions = [{ label: "더 게임", value: "the-game" }];
 
   return (
     <Dialog.Root>
@@ -24,6 +25,13 @@ const CreateRoomDialog = () => {
               label='방 이름'
               placeholder='방 이름을 입력하세요'
             />
+            <label>
+              <LabelSelect
+                label='게임 종류'
+                options={gameKindOptions}
+                defaultValue='the-game'
+              />
+            </label>
             <label>
               <LabelSelect
                 label='게임 인원'
