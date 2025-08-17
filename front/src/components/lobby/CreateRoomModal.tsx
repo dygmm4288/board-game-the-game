@@ -19,14 +19,16 @@ const CreateRoomDialog = () => {
         </Dialog.Description>
         <form>
           <Flex direction='column' gap='2'>
-            <LabelInput
-              labelStyle={label1}
-              id=''
-              value=''
-              onChange={() => {}}
-              label='방 이름'
-              placeholder='방 이름을 입력하세요'
-            />
+            <label>
+              <LabelInput
+                labelStyle={label1}
+                id='name'
+                value=''
+                onChange={() => {}}
+                label='방 이름'
+                placeholder='방 이름을 입력하세요'
+              />
+            </label>
             <label>
               <LabelSelect
                 labelStyle={label1}

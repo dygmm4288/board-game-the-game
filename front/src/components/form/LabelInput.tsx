@@ -1,4 +1,4 @@
-import { Box, Text, TextField } from "@radix-ui/themes";
+import { Text, TextField } from "@radix-ui/themes";
 import type { ChangeEvent } from "react";
 import type { LabelStyle } from "../../types/style.type";
 type Props = {
@@ -35,10 +35,9 @@ export default function LabelInput({
   onChange,
 }: Props) {
   return (
-    <Box>
+    <>
       <Text
-        as='label'
-        htmlFor={id}
+        as='div'
         mb='2'
         size={labelStyle.textSize}
         weight={labelStyle.textWeight}>
@@ -51,6 +50,6 @@ export default function LabelInput({
         placeholder={placeholder}
         onChange={onChange}
       />
-    </Box>
+    </>
   );
 }

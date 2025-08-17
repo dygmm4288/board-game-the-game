@@ -28,34 +28,41 @@ export default function Login({ type }: Props) {
         <Heading>{type === "login" ? "로그인" : "회원가입"}</Heading>
         <form onSubmit={handleSubmit}>
           <Flex as='div' direction='column' gap='5'>
-            <LabelInput
-              labelStyle={label1}
-              label='닉네임'
-              id='name'
-              value={loginForm.name}
-              placeholder='닉네임을 입력하세요'
-              onChange={handleChange("name")}
-              type='text'
-            />
-            <LabelInput
-              labelStyle={label1}
-              label='비밀번호'
-              id='password'
-              value={loginForm.pwd}
-              placeholder='비밀번호를 입력하세요'
-              onChange={handleChange("pwd")}
-              type='password'
-            />
-            {type === "signup" && (
+            <label>
               <LabelInput
                 labelStyle={label1}
-                label='비밀번호 확인'
-                id='password-confirm'
-                value={loginForm.confirmPwd}
-                placeholder='비밀번호를 다시 입력하세요'
-                onChange={handleChange("confirmPwd")}
+                label='닉네임'
+                id='name'
+                value={loginForm.name}
+                placeholder='닉네임을 입력하세요'
+                onChange={handleChange("name")}
+                type='text'
+              />
+            </label>
+
+            <label>
+              <LabelInput
+                labelStyle={label1}
+                label='비밀번호'
+                id='password'
+                value={loginForm.pwd}
+                placeholder='비밀번호를 입력하세요'
+                onChange={handleChange("pwd")}
                 type='password'
               />
+            </label>
+            {type === "signup" && (
+              <label>
+                <LabelInput
+                  labelStyle={label1}
+                  label='비밀번호 확인'
+                  id='password-confirm'
+                  value={loginForm.confirmPwd}
+                  placeholder='비밀번호를 다시 입력하세요'
+                  onChange={handleChange("confirmPwd")}
+                  type='password'
+                />
+              </label>
             )}
             <Flex direction='column' gap='5'>
               <Button type='submit'>
