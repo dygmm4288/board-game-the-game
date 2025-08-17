@@ -1,4 +1,5 @@
-import { Badge, Button, Flex, Text } from "@radix-ui/themes";
+import { Badge, Flex, Text } from "@radix-ui/themes";
+import RoomBtns from "../components/lobby/RoomBtns";
 import RoomList from "../components/lobby/RoomList";
 import { useRoom } from "../queries/room";
 
@@ -8,8 +9,7 @@ export default function Lobby() {
   return (
     <section>
       <h1>Lobby Page</h1>
-      <Button>방 만들기</Button>
-      <Button>코드로 참여</Button>
+      <RoomBtns />
 
       <Flex align='center' gap='2' mb='2'>
         <Text size='2' color='gray'>
