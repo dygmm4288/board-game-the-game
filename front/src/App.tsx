@@ -8,6 +8,7 @@ import router from "./routes";
 
 export default function App() {
   const client = new QueryClient();
+
   return (
     <Theme>
       <ToastContainer />

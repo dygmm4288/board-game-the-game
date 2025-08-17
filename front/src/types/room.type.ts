@@ -1,5 +1,5 @@
-import type { GameEngine } from "../gameEngine.type";
 import type User from "../models/user";
+import type { GameEngine } from "./gameEngine.type";
 
 export interface Room {
   id: string;
