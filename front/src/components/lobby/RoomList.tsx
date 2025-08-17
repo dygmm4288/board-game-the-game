@@ -7,7 +7,6 @@ export default function RoomList() {
   const { rooms, fetchRoom } = useRoom();
 
   useEffect(() => {
-    console.log("call here");
     fetchRoom();
   }, []);
 
