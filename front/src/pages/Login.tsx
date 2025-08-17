@@ -4,6 +4,7 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import LabelInput from "../components/form/LabelInput";
 import useAuth from "../hooks/useAuth";
 import useLoginForm from "../hooks/useLoginForm";
+import { label1 } from "../styles/text.style";
 
 type Props = {
   type: "login" | "signup";
@@ -28,6 +29,7 @@ export default function Login({ type }: Props) {
         <form onSubmit={handleSubmit}>
           <Flex as='div' direction='column' gap='5'>
             <LabelInput
+              labelStyle={label1}
               label='닉네임'
               id='name'
               value={loginForm.name}
@@ -36,6 +38,7 @@ export default function Login({ type }: Props) {
               type='text'
             />
             <LabelInput
+              labelStyle={label1}
               label='비밀번호'
               id='password'
               value={loginForm.pwd}
@@ -45,6 +48,7 @@ export default function Login({ type }: Props) {
             />
             {type === "signup" && (
               <LabelInput
+                labelStyle={label1}
                 label='비밀번호 확인'
                 id='password-confirm'
                 value={loginForm.confirmPwd}

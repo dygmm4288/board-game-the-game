@@ -1,4 +1,5 @@
 import { Button, Dialog, Flex } from "@radix-ui/themes";
+import { label1 } from "../../styles/text.style";
 import LabelInput from "../form/LabelInput";
 import LabelSelect from "../form/LabelSelect";
 
@@ -19,6 +20,7 @@ const CreateRoomDialog = () => {
         <form>
           <Flex direction='column' gap='2'>
             <LabelInput
+              labelStyle={label1}
               id=''
               value=''
               onChange={() => {}}
@@ -27,6 +29,7 @@ const CreateRoomDialog = () => {
             />
             <label>
               <LabelSelect
+                labelStyle={label1}
                 label='게임 종류'
                 options={gameKindOptions}
                 defaultValue='the-game'
@@ -34,6 +37,7 @@ const CreateRoomDialog = () => {
             </label>
             <label>
               <LabelSelect
+                labelStyle={label1}
                 label='게임 인원'
                 options={capacityOptions}
                 defaultValue='1'

@@ -1,5 +1,6 @@
 import { Box, Text, TextField } from "@radix-ui/themes";
 import type { ChangeEvent } from "react";
+import type { LabelStyle } from "../../types/style.type";
 type Props = {
   label: string;
   id: string;
@@ -20,6 +21,7 @@ type Props = {
     | undefined;
   value: string;
   placeholder: string;
+  labelStyle: LabelStyle;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 };
 
@@ -29,11 +31,17 @@ export default function LabelInput({
   type,
   value,
   placeholder,
+  labelStyle,
   onChange,
 }: Props) {
   return (
     <Box>
-      <Text as='label' htmlFor={id}>
+      <Text
+        as='label'
+        htmlFor={id}
+        mb='2'
+        size={labelStyle.textSize}
+        weight={labelStyle.textWeight}>
         {label}
       </Text>
       <TextField.Root
