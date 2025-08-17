@@ -5,7 +5,5 @@ export const gameSocket = (socket: Socket, nsp: Namespace) => {
     socket.join(gameId);
   });
 
-  socket.on("startGame", ({ gameId }) => {
-    gameService.start;
-  });
+  socket.on("startGame", ({ gameId }) => {});
 };

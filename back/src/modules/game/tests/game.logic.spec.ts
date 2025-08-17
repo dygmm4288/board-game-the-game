@@ -11,7 +11,7 @@ import {
   hasPlayableCard,
   shuffleDeck,
 } from "../game.logic";
-import { Player, Stack, TheGame } from "../game.model";
+import { GamePlayer, Stack, TheGame } from "../game.model";
 
 describe("shuffle deck", () => {
   it("주어진 개수만큼 덱을 구성해야한다.", () => {
@@ -80,7 +80,7 @@ describe("canPlaceCard", () => {
 });
 
 describe("dealCards", () => {
-  const players: Player[] = [
+  const players: GamePlayer[] = [
     { id: "p1", name: "P1", hand: [] },
     { id: "p2", name: "P2", hand: [] },
   ];
@@ -149,7 +149,7 @@ describe("getUpdatedStack", () => {
 });
 
 describe("hasPlayableCard", () => {
-  const player: Player = { id: "p1", name: "p1", hand: [10] };
+  const player: GamePlayer = { id: "p1", name: "p1", hand: [10] };
   it("플레이할 수 있는 카드가 존재하면 true를 반환한다.", () => {
     const stacks: Stack[] = [
       { id: "asc-1", direction: STACK_DIRECTION.ASC, cards: [5] },
@@ -165,7 +165,7 @@ describe("hasPlayableCard", () => {
 });
 
 describe("dropCard", () => {
-  const player: Player = { id: "p1", name: "p1", hand: [10, 3] };
+  const player: GamePlayer = { id: "p1", name: "p1", hand: [10, 3] };
   const stack: Stack = {
     id: "asc-1",
     direction: STACK_DIRECTION.ASC,
@@ -199,7 +199,7 @@ describe("dropCard", () => {
 
 describe("drawCard", () => {
   const deck = [10, 20, 30];
-  const player: Player = { id: "p1", name: "p1", hand: [] };
+  const player: GamePlayer = { id: "p1", name: "p1", hand: [] };
 
   it("덱에서 카드를 뽑으면 그 카드는 없어야 한다.", () => {
     const { updatedDeck, card } = drawCard(deck, player);
@@ -232,17 +232,14 @@ describe("getNextTurnIndex", () => {
 
   cases.forEach(({ currentTurn, expected }) => {
     const game: TheGame = {
-      id: "g-1",
-      createdAt: new Date(),
-      currentTurn,
       deck: [],
       players: [
         { id: "p1", name: "p1", hand: [] },
         { id: "p2", name: "p2", hand: [] },
       ],
       stacks: [{ id: "asc-1", direction: STACK_DIRECTION.ASC, cards: [] }],
-      status: "in-progress",
       dropCardCount: 0,
+      currentTurn: 0,
     };
 
     it(`current Turn :${currentTurn} -> expected: ${expected}`, () => {
