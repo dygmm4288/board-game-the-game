@@ -7,7 +7,15 @@ interface Props extends SelectProps {
   label: string;
   labelStyle: LabelStyle;
 }
-const LabelSelect = ({ label, labelStyle, options, defaultValue }: Props) => {
+
+const LabelSelect = ({
+  label,
+  labelStyle,
+  options,
+  defaultValue,
+  value,
+  onChange,
+}: Props) => {
   return (
     <>
       <Text
@@ -17,7 +25,12 @@ const LabelSelect = ({ label, labelStyle, options, defaultValue }: Props) => {
         weight={labelStyle.textWeight}>
         {label}
       </Text>
-      <Select options={options} defaultValue={defaultValue} />
+      <Select
+        options={options}
+        defaultValue={defaultValue}
+        value={value}
+        onChange={onChange}
+      />
     </>
   );
 };

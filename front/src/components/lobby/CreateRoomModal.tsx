@@ -1,4 +1,5 @@
 import { Button, Dialog, Flex } from "@radix-ui/themes";
+import useForm from "../../hooks/useForm";
 import { label1 } from "../../styles/text.style";
 import LabelInput from "../form/LabelInput";
 import LabelSelect from "../form/LabelSelect";
@@ -6,6 +7,12 @@ import LabelSelect from "../form/LabelSelect";
 const CreateRoomDialog = () => {
   const capacityOptions = ["1", "2", "3", "4", "5"];
   const gameKindOptions = [{ label: "더 게임", value: "the-game" }];
+
+  const { value: form, set } = useForm({
+    name: "",
+    kind: "the-game",
+    capacity: "0",
+  });
 
   return (
     <Dialog.Root>
@@ -23,8 +30,8 @@ const CreateRoomDialog = () => {
               <LabelInput
                 labelStyle={label1}
                 id='name'
-                value=''
-                onChange={() => {}}
+                value={form.name}
+                onChange={(e) => set("name", e.target.value)}
                 label='방 이름'
                 placeholder='방 이름을 입력하세요'
               />
@@ -35,6 +42,8 @@ const CreateRoomDialog = () => {
                 label='게임 종류'
                 options={gameKindOptions}
                 defaultValue='the-game'
+                value={form.kind}
+                onChange={set("kind")}
               />
             </label>
             <label>
@@ -43,6 +52,8 @@ const CreateRoomDialog = () => {
                 label='게임 인원'
                 options={capacityOptions}
                 defaultValue='1'
+                value={form.capacity}
+                onChange={set("capacity")}
               />
             </label>
           </Flex>

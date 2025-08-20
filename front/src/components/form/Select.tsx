@@ -5,11 +5,14 @@ export type Option = {
   value: string;
 };
 
-export type SelectProps = {
+export interface SelectProps {
   options: string[] | Option[];
   defaultValue?: string;
-};
-const Select = ({ options, defaultValue }: SelectProps) => {
+  value?: string;
+  onChange: (value: string) => void;
+}
+
+const Select = ({ options, defaultValue, value, onChange }: SelectProps) => {
   if (
     defaultValue &&
     !options.find((option) => {
@@ -21,7 +24,10 @@ const Select = ({ options, defaultValue }: SelectProps) => {
   }
 
   return (
-    <SelectRadix.Root defaultValue={defaultValue}>
+    <SelectRadix.Root
+      defaultValue={defaultValue}
+      value={value}
+      onValueChange={onChange}>
       <SelectRadix.Trigger />
       <SelectRadix.Content>
         {options.map((option) => {
