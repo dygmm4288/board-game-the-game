@@ -1,19 +1,29 @@
 import { useState } from "react";
 
-type Props<T extends object> = {
-  defaultValue?: T;
+type Obj = Record<string, unknown>;
+type Keyof<T extends Obj> = Extract<keyof T, string>;
+
+type useFormReturn<T extends Obj> = {
+  value: Readonly<T>;
+  get: <K extends Keyof<T>>(key: K) => T[K];
+  set: <K extends Keyof<T>>(key: K, newValue: T[K]) => void;
 };
 
-type Change<T> = (key: keyof T, newValue: T[keyof T]) => void;
+const useForm = <T extends Obj>(defaultValue: T): useFormReturn<T> => {
+  const [value, setValue] = useState(defaultValue);
 
-const useForm = <T extends object>({ defaultValue }: Props<T>) => {
-  const [formValue, setValue] = useState(defaultValue || {});
-
-  const handleChange: Change<T> = (key, newValue) => {
-    setValue((prevValue) => ({ ...prevValue, [key]: newValue }));
+  const get = <K extends Keyof<T>>(key: K) => value[key];
+  const set = <K extends Keyof<T>>(key: K, newValue: T[K]) => {
+    setValue((prev) =>
+      prev[key] === newValue ? prev : { ...prev, [key]: newValue },
+    );
   };
 
-  return { formValue, handleChange };
+  return {
+    value,
+    get,
+    set,
+  };
 };
 
 export default useForm;
