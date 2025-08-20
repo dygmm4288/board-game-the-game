@@ -3,33 +3,46 @@ import { useState } from "react";
 type Obj = Record<string, unknown>;
 type Keyof<T extends Obj> = Extract<keyof T, string>;
 
+const UNSET: unique symbol = Symbol("UNSET");
+
 type useFormReturn<T extends Obj> = {
   value: Readonly<T>;
-  set: <K extends Keyof<T>>(key: K) => (newValue: T[K]) => void;
-  setKey: <K extends Keyof<T>>(key: K, newValue: T[K]) => void;
+  set: {
+    <K extends Keyof<T>>(key: K, next: T[K] | ((prev: T[K]) => T[K])): void;
+    <K extends Keyof<T>>(key: K): (next: T[K] | ((prev: T[K]) => T[K])) => void;
+  };
 };
 
 const useForm = <T extends Obj>(defaultValue: T): useFormReturn<T> => {
   const [value, setValue] = useState(defaultValue);
 
-  const set =
-    <K extends Keyof<T>>(key: K) =>
-    (newValue: T[K]) => {
-      setValue((prev) =>
-        prev[key] === newValue ? prev : { ...prev, [key]: newValue },
-      );
-    };
+  const setImpl = <K extends Keyof<T>>(
+    key: K,
+    next: T[K] | ((prev: T[K]) => T[K]),
+  ) => {
+    setValue((prev) => {
+      const prevField = prev[key];
+      const nextField = next instanceof Function ? next(prevField) : next;
 
-  const setKey = <K extends Keyof<T>>(key: K, newValue: T[K]) => {
-    setValue((prev) =>
-      prev[key] === newValue ? prev : { ...prev, [key]: newValue },
-    );
+      return Object.is(prevField, nextField)
+        ? prev
+        : { ...prev, [key]: nextField };
+    });
+  };
+
+  const set = <K extends Keyof<T>>(
+    key: K,
+    next: T[K] | ((prev: T[K]) => T[K]) | typeof UNSET = UNSET,
+  ) => {
+    if (next === UNSET) {
+      return (n: T[K] | ((prev: T[K]) => T[K])) => setImpl(key, n);
+    }
+    return setImpl(key, next);
   };
 
   return {
     value,
-    set,
-    setKey,
+    set: set as useFormReturn<T>["set"],
   };
 };
 
