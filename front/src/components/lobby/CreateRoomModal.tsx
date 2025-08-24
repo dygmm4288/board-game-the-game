@@ -23,7 +23,10 @@ const CreateRoomDialog = () => {
   const handleForm = async (e: FormEvent) => {
     e.preventDefault();
 
-    const parsed = CreateRoomSchema.safeParse(form);
+    const parsed = CreateRoomSchema.safeParse({
+      ...form,
+      capacity: Number(form.capacity),
+    });
 
     if (!parsed.success) {
       return;
