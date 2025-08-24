@@ -11,7 +11,7 @@ export default function RoomList() {
   return (
     <Grid>
       {rooms!.map((room) => (
-        <RoomCard gameId={room.id} />
+        <RoomCard gameId={room.id} slug={room.slug} />
       ))}
     </Grid>
   );
