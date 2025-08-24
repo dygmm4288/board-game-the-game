@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { isNil, mapValues } from "lodash";
+import { invoke, isNil, mapValues } from "lodash";
 import { AssertionError } from "./error";
 
 type AsyncFunction = (
@@ -15,7 +15,9 @@ export const asyncHandler = (fn: AsyncFunction) => {
         if (isNil(result)) return res.sendStatus(201);
 
         if (Array.isArray(result)) {
-          const data = result.map((r) => r?.hideEntity() || r);
+          const data = result.map((r) => {
+            return invoke(r, "hideEntity") || r;
+          });
           return res.status(200).json(data);
         }
 
