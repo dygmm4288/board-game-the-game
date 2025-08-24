@@ -4,7 +4,7 @@ export default class User extends Base {
   name!: string;
   password!: null;
   constructor(data: User) {
-    super();
+    super(data as Base);
     this.name = data.name;
     this.password = null;
   }

@@ -1,6 +1,9 @@
 export default class Base {
-  id!: string;
-  created_at!: Date;
+  id: string;
+  createdAt: Date;
 
-  constructor() {}
+  constructor(data: Base) {
+    this.id = data.id;
+    this.createdAt = data.createdAt;
+  }
 }
