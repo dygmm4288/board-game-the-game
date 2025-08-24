@@ -5,5 +5,6 @@ import roomController from "../modules/room/room.controller";
 const router = express.Router();
 
 router.get("/", authenticate, roomController.getRooms);
+router.post("/", authenticate, roomController.createRoom);
 
 export default router;
