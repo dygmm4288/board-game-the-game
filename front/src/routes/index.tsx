@@ -4,6 +4,7 @@ import Layout from "../pages/Layout";
 import Lobby from "../pages/Lobby";
 import Login from "../pages/Login";
 import NotFoundPage from "../pages/NotFoundPage";
+import Room from "../pages/Room";
 import ProtectedRoute from "./ProtectedRoute";
 
 const router = createBrowserRouter([
@@ -30,6 +31,14 @@ const router = createBrowserRouter([
           </ProtectedRoute>
         ),
         children: [],
+      },
+      {
+        path: "room/:id",
+        element: (
+          <ProtectedRoute>
+            <Room />
+          </ProtectedRoute>
+        ),
       },
       { path: "*", element: <NotFoundPage /> },
     ],
