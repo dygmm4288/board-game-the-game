@@ -1,3 +1,4 @@
+import z from "zod";
 import type { GameEngine } from "../types/gameEngine.type";
 import Base from "./base";
 import type User from "./user";
@@ -23,3 +24,11 @@ export default class Room extends Base {
     return new Room(data);
   }
 }
+
+export const CreateRoomSchema = z.object({
+  kind: z.enum(["the-game"]),
+  capacity: z.number().int().min(1).max(8),
+  slug: z.string().trim().min(1),
+});
+
+export type CreateRoomPayload = z.infer<typeof CreateRoomSchema>;

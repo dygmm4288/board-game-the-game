@@ -2,7 +2,8 @@ import { Button, Dialog, Flex } from "@radix-ui/themes";
 import type { FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import useForm from "../../hooks/useForm";
-import { useCreateRoom, validateCreateRoom } from "../../queries/room";
+import { CreateRoomSchema } from "../../models/room";
+import { useCreateRoom } from "../../queries/room";
 import { label1 } from "../../styles/text.style";
 import LabelInput from "../form/LabelInput";
 import LabelSelect from "../form/LabelSelect";
@@ -12,7 +13,7 @@ const CreateRoomDialog = () => {
   const gameKindOptions = [{ label: "더 게임", value: "the-game" }];
 
   const { value: form, set } = useForm({
-    name: "",
+    slug: "",
     kind: "the-game",
     capacity: "0",
   });
@@ -22,18 +23,13 @@ const CreateRoomDialog = () => {
   const handleForm = async (e: FormEvent) => {
     e.preventDefault();
 
-    const { name, kind, capacity } = form;
-    const payload = {
-      name,
-      kind,
-      capacity: Number(capacity),
-    };
+    const parsed = CreateRoomSchema.safeParse(form);
 
-    if (!validateCreateRoom(payload)) {
+    if (!parsed.success) {
       return;
     }
 
-    const { data: room } = await createRoom.mutateAsync(payload);
+    const { data: room } = await createRoom.mutateAsync(parsed.data);
 
     navigate(`/room/${room.id}`, { replace: true, state: { room } });
   };
@@ -53,9 +49,9 @@ const CreateRoomDialog = () => {
             <label>
               <LabelInput
                 labelStyle={label1}
-                id='name'
-                value={form.name}
-                onChange={(e) => set("name", e.target.value)}
+                id='slug'
+                value={form.slug}
+                onChange={(e) => set("slug", e.target.value)}
                 label='방 이름'
                 placeholder='방 이름을 입력하세요'
               />
