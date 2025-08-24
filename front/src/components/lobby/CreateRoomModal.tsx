@@ -1,5 +1,8 @@
 import { Button, Dialog, Flex } from "@radix-ui/themes";
+import type { FormEvent } from "react";
+import { useNavigate } from "react-router-dom";
 import useForm from "../../hooks/useForm";
+import { useCreateRoom } from "../../queries/room";
 import { label1 } from "../../styles/text.style";
 import LabelInput from "../form/LabelInput";
 import LabelSelect from "../form/LabelSelect";
@@ -13,6 +16,26 @@ const CreateRoomDialog = () => {
     kind: "the-game",
     capacity: "0",
   });
+  const createRoom = useCreateRoom();
+  const navigate = useNavigate();
+
+  const handleForm = async (e: FormEvent) => {
+    e.preventDefault();
+
+    const { name, kind, capacity } = form;
+
+    if (!name || Number(capacity) <= 0) {
+      return;
+    }
+
+    const { data: room } = await createRoom.mutateAsync({
+      name,
+      kind,
+      capacity: Number(capacity),
+    });
+
+    navigate(`/room/${room.id}`, { replace: true, state: { room } });
+  };
 
   return (
     <Dialog.Root>
@@ -24,7 +47,7 @@ const CreateRoomDialog = () => {
         <Dialog.Description size='2' mb='4'>
           방 정보를 입력하여 방을 만들 수 있습니다.
         </Dialog.Description>
-        <form>
+        <form onSubmit={handleForm}>
           <Flex direction='column' gap='2'>
             <label>
               <LabelInput
@@ -64,7 +87,7 @@ const CreateRoomDialog = () => {
               </Button>
             </Dialog.Close>
             <Dialog.Close>
-              <Button>만들기</Button>
+              <Button type='submit'>만들기</Button>
             </Dialog.Close>
           </Flex>
         </form>

@@ -8,8 +8,8 @@ class IO {
     this.axios = axiosInstance;
     this.url = url;
   }
-  post(payload?: object) {
-    return this.axios.post(this.url, payload);
+  post<T>(payload?: object) {
+    return this.axios.post<T>(this.url, payload);
   }
 
   get(params) {
