@@ -2,7 +2,7 @@ import { Button, Dialog, Flex } from "@radix-ui/themes";
 import type { FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import useForm from "../../hooks/useForm";
-import { useCreateRoom } from "../../queries/room";
+import { useCreateRoom, validateCreateRoom } from "../../queries/room";
 import { label1 } from "../../styles/text.style";
 import LabelInput from "../form/LabelInput";
 import LabelSelect from "../form/LabelSelect";
@@ -23,16 +23,17 @@ const CreateRoomDialog = () => {
     e.preventDefault();
 
     const { name, kind, capacity } = form;
-
-    if (!name || Number(capacity) <= 0) {
-      return;
-    }
-
-    const { data: room } = await createRoom.mutateAsync({
+    const payload = {
       name,
       kind,
       capacity: Number(capacity),
-    });
+    };
+
+    if (!validateCreateRoom(payload)) {
+      return;
+    }
+
+    const { data: room } = await createRoom.mutateAsync(payload);
 
     navigate(`/room/${room.id}`, { replace: true, state: { room } });
   };

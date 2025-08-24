@@ -13,14 +13,14 @@ const RoomQueryKey = {
   get_one: "get-room",
 };
 
-const useRoom = (params?: unknown) => {
+export const useRoom = (params?: unknown) => {
   return useQuery<Room[]>({
     queryKey: RoomQueryKey.get,
     queryFn: () => roomApi.get(params).then((r) => r.data),
   });
 };
 
-export function useCreateRoom() {
+export const useCreateRoom = () => {
   const qc = useQueryClient();
 
   return useMutation({
@@ -29,6 +29,14 @@ export function useCreateRoom() {
       qc.invalidateQueries({ queryKey: RoomQueryKey.get });
     },
   });
-}
+};
 
-export { useRoom };
+export const validateCreateRoom = (payload: CreateRoomPayload) => {
+  const { name, kind, capacity } = payload;
+
+  if (kind !== "the-game") return false;
+  if (!name || !name.trim()) return false;
+  if (Number(capacity) <= 0) return false;
+
+  return true;
+};
