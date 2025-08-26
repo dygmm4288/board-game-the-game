@@ -37,7 +37,9 @@ class RoomController {
   public getActiveRoom = asyncHandler(async (req: AuthenticateRequest) => {
     const user = req.user as UserModel;
 
-    return await roomService.getActiveRoom(user);
+    const room = await roomService.getActiveRoom(user);
+
+    return room;
   });
 
   public getRoomOne = asyncHandler(async (req: AuthenticateRequest) => {
