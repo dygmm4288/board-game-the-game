@@ -50,3 +50,8 @@ export const errorHandler = (
 
   return res.status(500).json({ detail: "잠시 후 다시 시도해 주세요" });
 };
+
+export const logHandler = (req: Request, res: Response, next: NextFunction) => {
+  console.log(`${req.method}: ${req.url}`);
+  next();
+};
