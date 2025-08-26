@@ -21,7 +21,6 @@ export default function RoomRedirect({ children }: PropsWithChildren) {
   );
 
   useEffect(() => {
-    console.log("@@@ use effect", isLoading, isAuth, data);
     if (isLoading || !isAuth) return;
 
     const roomId = data?.id ?? null;
