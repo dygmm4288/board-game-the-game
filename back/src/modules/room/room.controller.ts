@@ -33,6 +33,27 @@ class RoomController {
 
     return rooms;
   });
+
+  public getActiveRoom = asyncHandler(async (req: AuthenticateRequest) => {
+    const user = req.user as UserModel;
+
+    return await roomService.getActiveRoom(user);
+  });
+
+  public getRoomOne = asyncHandler(async (req: AuthenticateRequest) => {
+    const { id } = req.params;
+    if (!id) return null;
+
+    const user = req.user as UserModel;
+
+    const userActiveRoom = await roomService.getActiveRoom(user);
+    const room = await roomService.getRoom(id);
+
+    if (!room || !userActiveRoom) return null;
+    if (room.id !== userActiveRoom.id) return null;
+
+    return room;
+  });
 }
 
 export default new RoomController();

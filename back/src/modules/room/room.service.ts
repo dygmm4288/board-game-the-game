@@ -44,6 +44,22 @@ class RoomService {
 
     return [];
   }
+
+  async getRoom(id: string) {
+    if (!id) return null;
+
+    return await this.roomRepository.findOne({ where: { id: id } });
+  }
+
+  async getActiveRoom(user: UserModel) {
+    if (!user.game) return null;
+
+    const room = await this.roomRepository.findOne({
+      where: { game: user.game },
+    });
+
+    return room;
+  }
 }
 
 export default new RoomService();

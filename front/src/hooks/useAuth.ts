@@ -18,16 +18,19 @@ export default function useAuth() {
   const { user, setUser } = useAuthStore();
 
   const getUser = () => user;
+
   const signIn = (user: WithOutPasswordUser, accessToken: string) => {
     store.save(USER_KEY, JSON.stringify(user));
     store.save(ACCESS_TOKEN_KEY, accessToken);
     setUser(user);
   };
+
   const logout = () => {
     store.delete(USER_KEY);
     store.delete(ACCESS_TOKEN_KEY);
     setUser(null);
   };
+
   const isAuth = user !== null;
 
   useEffect(() => {

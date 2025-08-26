@@ -1,23 +1,30 @@
-import type { Axios } from "axios";
+import type { Axios, AxiosRequestConfig } from "axios";
 import axiosInstance from ".";
 
 class IO {
   axios: Axios;
-  url: string;
-  constructor(url: string) {
+  baseUrl: string;
+
+  constructor(baseUrl: string) {
     this.axios = axiosInstance;
-    this.url = url;
+    this.baseUrl = baseUrl;
   }
+
+  private url(path?: string) {
+    if (!path) return this.baseUrl;
+    return `${this.baseUrl}${path}`;
+  }
+
   post<T>(payload?: object) {
-    return this.axios.post<T>(this.url, payload);
+    return this.axios.post<T>(this.url(), payload);
   }
 
-  get(params) {
-    return this.axios.get(this.url, params);
+  get<T = unknown>(config?: AxiosRequestConfig) {
+    return this.axios.get<T>(this.url(), config);
   }
 
-  get_one(id) {
-    return this.axios.get();
+  getOne<T = unknown>(id: string, config?: AxiosRequestConfig) {
+    return this.axios.get<T>(this.url(id), config);
   }
 
   delete(id) {

@@ -6,5 +6,6 @@ const router = express.Router();
 
 router.get("/", authenticate, roomController.getRooms);
 router.post("/", authenticate, roomController.createRoom);
+router.get("/me/active-room", authenticate, roomController.getActiveRoom);
 
 export default router;
