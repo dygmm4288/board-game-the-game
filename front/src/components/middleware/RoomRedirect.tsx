@@ -1,5 +1,6 @@
 import { useEffect, useMemo, type PropsWithChildren } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import useAuth from "../../hooks/useAuth";
 import { useActiveRoom } from "../../queries/room";
 
 const EXEMPT_PATHS = ["/room", "/login", "/sign"];
@@ -11,7 +12,8 @@ export default function RoomRedirect({ children }: PropsWithChildren) {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { roomId: routeRoomId } = useParams<{ roomId: string }>();
-  const { isLoading, data } = useActiveRoom();
+  const { isAuth } = useAuth();
+  const { isLoading, data } = useActiveRoom(isAuth);
 
   const shouldRedirect = useMemo(
     () => !isStartWithExemptPath(pathname),
@@ -19,7 +21,9 @@ export default function RoomRedirect({ children }: PropsWithChildren) {
   );
 
   useEffect(() => {
-    if (isLoading) return;
+    console.log("@@@ use effect", isLoading, isAuth, data);
+    if (isLoading || !isAuth) return;
+
     const roomId = data?.id ?? null;
     const navigateToMeRoom = () => navigate(`/room/${roomId}`);
 
@@ -34,7 +38,15 @@ export default function RoomRedirect({ children }: PropsWithChildren) {
       navigateToMeRoom();
       return;
     }
-  }, [pathname, isLoading, data, navigate, shouldRedirect, routeRoomId]);
+  }, [
+    pathname,
+    isAuth,
+    isLoading,
+    data,
+    navigate,
+    shouldRedirect,
+    routeRoomId,
+  ]);
 
   return <>{children}</>;
 }

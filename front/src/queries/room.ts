@@ -28,9 +28,10 @@ export const useCreateRoom = () => {
   });
 };
 
-export const useActiveRoom = () => {
+export const useActiveRoom = (enabled: boolean) => {
   return useQuery<Room | null>({
     queryKey: RoomQueryKey.ACTIVE_ROOM,
     queryFn: () => roomApi.getOne<Room>("/me/active-room").then((r) => r.data),
+    enabled,
   });
 };
