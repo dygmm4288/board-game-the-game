@@ -12,7 +12,7 @@ export const asyncHandler = (fn: AsyncFunction) => {
   return (req: Request, res: Response, next: NextFunction) => {
     fn(req, res, next)
       .then((result) => {
-        if (isNil(result)) return res.sendStatus(201);
+        if (isNil(result)) return res.status(201).json(result);
 
         if (Array.isArray(result)) {
           const data = result.map((r) => {
