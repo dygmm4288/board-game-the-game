@@ -6,7 +6,7 @@ import path from "path";
 import { AppDataSource } from "../config/db";
 import registerRoute from "../routes";
 import { initSockets } from "../sockets";
-import { errorHandler, logHandler } from "../utils/middleware";
+import { errorHandler, logMethodAndUrlHandler } from "../utils/middleware";
 
 dotenv.config({ path: path.resolve(__dirname, "../config/.env.local") });
 
@@ -21,7 +21,7 @@ AppDataSource.initialize()
         origin: WEB_ORIGIN,
       }),
     );
-    app.use(logHandler);
+    app.use(logMethodAndUrlHandler);
 
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
