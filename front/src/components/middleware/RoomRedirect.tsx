@@ -3,6 +3,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import { useActiveRoom } from "../../queries/room";
 
+// EXEMPT: 면제된
 const EXEMPT_PATHS = ["/room", "/login", "/sign"];
 
 const isStartWithExemptPath = (pathname: string) =>
