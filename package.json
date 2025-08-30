@@ -1,0 +1,12 @@
+{
+  "name": "board_game",
+  "packageManager": "yarn@4.9.1",
+  "workspaces": [
+    "front",
+    "back"
+  ],
+  "private": "true",
+  "scripts": {
+    "dev": "yarn workspaces foreach --all -p run dev"
+  }
+}
