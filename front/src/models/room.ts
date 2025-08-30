@@ -26,9 +26,16 @@ export default class Room extends Base {
 }
 
 export const CreateRoomSchema = z.object({
-  kind: z.enum(["the-game"]),
-  capacity: z.number().int().min(1).max(8),
-  slug: z.string().trim().min(1),
+  kind: z.enum(["the-game"], { error: "올바르지 않은 게임 종류입니다" }),
+  capacity: z
+    .number()
+    .int({ error: "인원을 선택해 주세요" })
+    .min(1, { error: "최소 1명은 있어야 합니다" })
+    .max(5, { error: "최대 5명까지 가능합니다" }),
+  slug: z
+    .string({ error: "방 이름을 입력해 주세요" })
+    .trim()
+    .min(1, { error: "방 이름을 입력해 주세요" }),
 });
 
 export type CreateRoomPayload = z.infer<typeof CreateRoomSchema>;

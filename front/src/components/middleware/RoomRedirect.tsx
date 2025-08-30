@@ -18,7 +18,7 @@ export default function RoomRedirect({ children }: PropsWithChildren) {
 
   const shouldRedirect = useMemo(
     () => !isStartWithExemptPath(pathname),
-    [pathname],
+    [pathname]
   );
 
   useEffect(() => {
