@@ -35,7 +35,8 @@ export const CreateRoomSchema = z.object({
   slug: z
     .string({ error: "방 이름을 입력해 주세요" })
     .trim()
-    .min(1, { error: "방 이름을 입력해 주세요" }),
+    .min(3, { error: "방 이름이 너무 짧습니다 " })
+    .max(64, { error: "방 이름이 너무 깁니다" }),
 });
 
 export type CreateRoomPayload = z.infer<typeof CreateRoomSchema>;
